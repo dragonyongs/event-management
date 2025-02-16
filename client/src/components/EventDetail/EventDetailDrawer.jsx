@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { thumbnailOptions } from '../../data/eventData';
 import { GolfInfo, TourInfo } from './EventDetailSections';
+import { getCount } from '../../utils/eventUtils';
 
 const EventDetailDrawer = ({ event, onClose, onViewFullScreen }) => {
   const defaultThumbnail =
@@ -8,6 +9,9 @@ const EventDetailDrawer = ({ event, onClose, onViewFullScreen }) => {
       ? thumbnailOptions.find((option) => option.id === event.type[0])
       : null;
   const [imageError, setImageError] = useState(false);
+
+  const userCount = getCount(event.users);
+  const stepsCount = getCount(event.steps);
 
   return (
     <div className="h-full flex flex-col bg-white">
@@ -68,7 +72,7 @@ const EventDetailDrawer = ({ event, onClose, onViewFullScreen }) => {
                     : '예정됨'}
               </span>
               <span className="text-sm text-gray-500">
-                참가자 {event.users}명 · 스텝 {event.steps}명
+                참가자 {userCount}명 · 스텝 {stepsCount}명
               </span>
             </div>
 

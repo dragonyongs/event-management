@@ -18,11 +18,13 @@ const Title = ({
           이벤트 생성
         </button>
       </header>
-      <CreateEventDrawer
-        isOpen={isCreateDrawerOpen}
-        onClose={() => setIsCreateDrawerOpen(false)}
-        handleCreateEvent={handleCreateEvent}
-      />
+      {isCreateDrawerOpen && (
+        <CreateEventDrawer
+          isOpen={isCreateDrawerOpen}
+          onClose={() => setIsCreateDrawerOpen(false)}
+          handleCreateEvent={handleCreateEvent}
+        />
+      )}
     </>
   );
 };

@@ -1,3 +1,5 @@
+import { getCount } from '../../utils/eventUtils';
+
 const EventHeader = ({ event }) => {
   return (
     <div className="bg-white border-b">
@@ -8,7 +10,8 @@ const EventHeader = ({ event }) => {
             <div className="mt-2 space-y-1">
               <p className="text-gray-600">{event.date}</p>
               <p className="text-gray-600">
-                참가자 {event.users}명 · 스텝 {event.steps}명
+                참가자 {getCount(event.users)}명 · 스텝 {getCount(event.steps)}
+                명
               </p>
             </div>
           </div>

@@ -1,85 +1,21 @@
-export const events = [
-  {
-    id: 1,
-    title: 'React 스터디 모임',
-    date: '2025-02-20 ~ 2025-03-10',
-    users: 150,
-    steps: 5,
-    status: 'ongoing',
-    thumbnail:
-      'https://plus.unsplash.com/premium_photo-1739091068170-5486fbb36cff?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 2,
-    title: 'AI 해커톤',
-    date: '2025-03-15 ~ 2025-03-20',
-    users: 230,
-    steps: 7,
-    status: 'completed',
-    thumbnail:
-      'https://images.unsplash.com/photo-1733506312514-267f8134208a?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 3,
-    title: '웹개발 컨퍼런스',
-    date: '2025-04-01 ~ 2025-04-03',
-    users: 300,
-    steps: 4,
-    status: 'ongoing',
-    thumbnail:
-      'https://images.unsplash.com/photo-1738683987582-b52d371d2782?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 4,
-    title: '블록체인 해커톤',
-    date: '2025-01-10 ~ 2025-01-15',
-    users: 180,
-    steps: 6,
-    status: 'completed',
-    thumbnail:
-      'https://images.unsplash.com/photo-1738807991630-260f842bdf49?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw5NXx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 5,
-    title: '프론트엔드 개발자 컨퍼런스',
-    date: '2025-05-05 ~ 2025-05-07',
-    users: 250,
-    steps: 5,
-    status: 'upcoming',
-    thumbnail:
-      'https://images.unsplash.com/photo-1734784548166-a1ffe07dd7cd?q=80&w=3432&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 6,
-    title: '데이터 사이언스 워크숍',
-    date: '2025-06-10 ~ 2025-06-12',
-    users: 120,
-    steps: 3,
-    status: 'upcoming',
-    thumbnail:
-      'https://images.unsplash.com/photo-1737914111975-b4d513d783e0?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 7,
-    title: '모바일 앱 개발 세미나',
-    date: '2025-07-15 ~ 2025-07-16',
-    users: 200,
-    steps: 4,
-    status: 'upcoming',
-    thumbnail:
-      'https://plus.unsplash.com/premium_photo-1738614647383-0435fcb26a55?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 8,
-    title: '클라우드 컴퓨팅 컨퍼런스',
-    date: '2025-08-20 ~ 2025-08-22',
-    users: 400,
-    steps: 6,
-    status: 'upcoming',
-    thumbnail:
-      'https://images.unsplash.com/photo-1726064855857-4540ed3834db?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-];
+// 주어진 개수만큼 가상 사용자 정보를 생성하는 헬퍼 함수
+const generateDummyUsers = (count) => {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `user_${index + 1}`,
+    name: `User ${index + 1}`,
+    role: 'participant',
+  }));
+};
+
+// 주어진 개수만큼 가상 스텝 정보를 생성하는 헬퍼 함수
+const generateDummySteps = (count) => {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `step_${index + 1}`,
+    title: `Step ${index + 1}`,
+    startTime: '09:00', // 필요시 적절한 시간으로 변경 가능
+    endTime: '10:00', // 필요시 적절한 시간으로 변경 가능
+  }));
+};
 
 export const sampleEventData = [
   {
@@ -94,8 +30,25 @@ export const sampleEventData = [
       url: 'https://images.unsplash.com/photo-1500932334442-8761ee4810a7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     type: ['golf', 'tour'],
-    users: 120,
-    steps: 8,
+    users: [
+      { id: 'user_001', name: '김영희', role: 'participant' },
+      { id: 'user_002', name: '이철수', role: 'participant' },
+    ],
+    staffs: [],
+    steps: [
+      {
+        id: 'step_001',
+        title: '예약 확인',
+        startTime: '09:00',
+        endTime: '10:00',
+      },
+      {
+        id: 'step_002',
+        title: '출발 준비',
+        startTime: '10:00',
+        endTime: '11:00',
+      },
+    ],
     location: '제주도',
     description: '제주도의 아름다운 자연과 함께하는 골프 & 관광 투어입니다.',
     golfDetails: {
@@ -171,8 +124,32 @@ export const sampleEventData = [
       url: null,
     },
     type: ['hackathon'],
-    users: 200,
-    steps: 10,
+    users: [
+      { id: 'user_101', name: '김민수', role: 'participant' },
+      { id: 'user_102', name: '이영희', role: 'participant' },
+      { id: 'user_103', name: '박지훈', role: 'participant' },
+    ],
+    staffs: [],
+    steps: [
+      {
+        id: 'step_001',
+        title: '아이디어 제출',
+        startTime: '09:00',
+        endTime: '10:00',
+      },
+      {
+        id: 'step_002',
+        title: '팀 구성',
+        startTime: '10:00',
+        endTime: '11:00',
+      },
+      {
+        id: 'step_003',
+        title: '개발 시작',
+        startTime: '11:00',
+        endTime: '12:00',
+      },
+    ],
     location: '서울',
     description: '서울에서 열리는 해커톤 대회입니다.',
   },
@@ -188,8 +165,26 @@ export const sampleEventData = [
       url: null,
     },
     type: ['sports'],
-    users: 500,
-    steps: 5,
+    users: [
+      { id: 'user_201', name: '홍길동', role: 'participant' },
+      { id: 'user_202', name: '김철수', role: 'participant' },
+      { id: 'user_203', name: '이수민', role: 'participant' },
+    ],
+    staffs: [],
+    steps: [
+      {
+        id: 'step_101',
+        title: '참가 등록',
+        startTime: '09:00',
+        endTime: '10:00',
+      },
+      {
+        id: 'step_102',
+        title: '시작 전 준비',
+        startTime: '10:00',
+        endTime: '11:00',
+      },
+    ],
     location: '부산',
     description: '부산에서 열리는 국제 마라톤 대회입니다.',
   },
@@ -199,13 +194,197 @@ export const sampleEventData = [
     startDate: '2024-11-05',
     endDate: '2024-11-07',
     status: 'upcoming',
-    thumbnail: { icon: '🎯', bgColor: 'bg-blue-100', url: null },
+    thumbnail: {
+      icon: '🎯',
+      bgColor: 'bg-blue-100',
+      url: null,
+    },
     type: ['conference'],
-    users: 1000,
-    steps: 12,
+    users: [
+      { id: 'user_301', name: '최영수', role: 'participant' },
+      { id: 'user_302', name: '박지영', role: 'participant' },
+      { id: 'user_303', name: '이민호', role: 'participant' },
+    ],
+    staffs: [],
+    steps: [
+      { id: 'step_201', title: '등록', startTime: '09:00', endTime: '10:00' },
+      {
+        id: 'step_202',
+        title: '세션 참석',
+        startTime: '10:00',
+        endTime: '12:00',
+      },
+      {
+        id: 'step_203',
+        title: '네트워킹',
+        startTime: '12:00',
+        endTime: '13:00',
+      },
+      { id: 'step_204', title: '피드백', startTime: '13:00', endTime: '14:00' },
+    ],
     location: '서울 코엑스',
     description:
-      '세계 각국 스타트업이 모여 네트워킹하고 발표하는 컨퍼 런스입니다.',
+      '세계 각국 스타트업이 모여 네트워킹하고 발표하는 컨퍼런스입니다.',
+  },
+  {
+    id: 'evt_005',
+    title: 'React 스터디 모임',
+    startDate: '2025-02-20',
+    endDate: '2025-03-10',
+    status: 'ongoing',
+    thumbnail: {
+      icon: '',
+      bgColor: '',
+      url: 'https://plus.unsplash.com/premium_photo-1739091068170-5486fbb36cff?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    type: [],
+    users: generateDummyUsers(150),
+    staffs: [],
+    steps: generateDummySteps(5),
+    location: '',
+    description: '',
+    golfDetails: null,
+    tourDetails: null,
+  },
+  {
+    id: 'evt_006',
+    title: 'AI 해커톤',
+    startDate: '2025-03-15',
+    endDate: '2025-03-20',
+    status: 'completed',
+    thumbnail: {
+      icon: '',
+      bgColor: '',
+      url: 'https://images.unsplash.com/photo-1733506312514-267f8134208a?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    type: [],
+    users: generateDummyUsers(230),
+    staffs: [],
+    steps: generateDummySteps(7),
+    location: '',
+    description: '',
+    golfDetails: null,
+    tourDetails: null,
+  },
+  {
+    id: 'evt_007',
+    title: '웹개발 컨퍼런스',
+    startDate: '2025-04-01',
+    endDate: '2025-04-03',
+    status: 'ongoing',
+    thumbnail: {
+      icon: '',
+      bgColor: '',
+      url: 'https://images.unsplash.com/photo-1738683987582-b52d371d2782?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    type: [],
+    users: generateDummyUsers(300),
+    staffs: [],
+    steps: generateDummySteps(4),
+    location: '',
+    description: '',
+    golfDetails: null,
+    tourDetails: null,
+  },
+  {
+    id: 'evt_008',
+    title: '블록체인 해커톤',
+    startDate: '2025-01-10',
+    endDate: '2025-01-15',
+    status: 'completed',
+    thumbnail: {
+      icon: '',
+      bgColor: '',
+      url: 'https://images.unsplash.com/photo-1738807991630-260f842bdf49?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw5NXx8fGVufDB8fHx8fA%3D%3D',
+    },
+    type: [],
+    users: generateDummyUsers(180),
+    staffs: [],
+    steps: generateDummySteps(6),
+    location: '',
+    description: '',
+    golfDetails: null,
+    tourDetails: null,
+  },
+  {
+    id: 'evt_009',
+    title: '프론트엔드 개발자 컨퍼런스',
+    startDate: '2025-05-05',
+    endDate: '2025-05-07',
+    status: 'upcoming',
+    thumbnail: {
+      icon: '',
+      bgColor: '',
+      url: 'https://images.unsplash.com/photo-1734784548166-a1ffe07dd7cd?q=80&w=3432&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    type: [],
+    users: generateDummyUsers(250),
+    staffs: [],
+    steps: generateDummySteps(5),
+    location: '',
+    description: '',
+    golfDetails: null,
+    tourDetails: null,
+  },
+  {
+    id: 'evt_010',
+    title: '데이터 사이언스 워크숍',
+    startDate: '2025-06-10',
+    endDate: '2025-06-12',
+    status: 'upcoming',
+    thumbnail: {
+      icon: '',
+      bgColor: '',
+      url: 'https://images.unsplash.com/photo-1737914111975-b4d513d783e0?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    type: [],
+    users: generateDummyUsers(120),
+    staffs: [],
+    steps: generateDummySteps(3),
+    location: '',
+    description: '',
+    golfDetails: null,
+    tourDetails: null,
+  },
+  {
+    id: 'evt_011',
+    title: '모바일 앱 개발 세미나',
+    startDate: '2025-07-15',
+    endDate: '2025-07-16',
+    status: 'upcoming',
+    thumbnail: {
+      icon: '',
+      bgColor: '',
+      url: 'https://plus.unsplash.com/premium_photo-1738614647383-0435fcb26a55?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    type: [],
+    users: generateDummyUsers(200),
+    staffs: [],
+    steps: generateDummySteps(4),
+    location: '',
+    description: '',
+    golfDetails: null,
+    tourDetails: null,
+  },
+  {
+    id: 'evt_012',
+    title: '클라우드 컴퓨팅 컨퍼런스',
+    startDate: '2025-08-20',
+    endDate: '2025-08-22',
+    status: 'upcoming',
+    thumbnail: {
+      icon: '',
+      bgColor: '',
+      url: 'https://images.unsplash.com/photo-1726064855857-4540ed3834db?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
+    type: [],
+    users: generateDummyUsers(400),
+    staffs: [],
+    steps: generateDummySteps(6),
+    location: '',
+    description: '',
+    golfDetails: null,
+    tourDetails: null,
   },
 ];
 
@@ -217,4 +396,20 @@ export const thumbnailOptions = [
   { id: 'golf', icon: '⛳', bgColor: 'bg-emerald-100' },
   { id: 'tour', icon: '🏖️', bgColor: 'bg-orange-100' },
   { id: 'sports', icon: '🏃', bgColor: 'bg-red-100' },
+];
+
+export const dummyUsers = [
+  { id: 'user_001', name: '홍길동' },
+  { id: 'user_002', name: '김철수' },
+  { id: 'user_003', name: '박영수' },
+  { id: 'user_004', name: '이민정' },
+  { id: 'user_005', name: '최지훈' },
+];
+
+export const dummyStaffs = [
+  { id: 'user_001', name: '홍길동' },
+  { id: 'user_002', name: '김철수' },
+  { id: 'user_003', name: '박영수' },
+  { id: 'user_004', name: '이민정' },
+  { id: 'user_005', name: '최지훈' },
 ];

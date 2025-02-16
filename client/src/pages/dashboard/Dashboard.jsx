@@ -20,6 +20,14 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.body.style.overflow =
+      isDrawerOpen || isCreateDrawerOpen ? 'hidden' : 'auto';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isDrawerOpen, isCreateDrawerOpen]);
+
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -65,9 +73,7 @@ const Dashboard = () => {
       startDate: newEventData.startDate,
       endDate: newEventData.endDate,
       status: 'upcoming',
-      thumbnail: newEventData.thumbnail?.url
-        ? newEventData.thumbnail.url
-        : newEventData.thumbnail,
+      thumbnail: newEventData.thumbnail,
       type: newEventData.type,
       users: 0,
       steps: 0,

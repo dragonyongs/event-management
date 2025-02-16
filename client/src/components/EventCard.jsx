@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { thumbnailOptions } from '../data/eventData';
+import { getCount } from '../utils/eventUtils';
 
 const StatusBadge = ({ status, dDay }) => {
   const statusStyles = {
@@ -37,6 +38,9 @@ const EventCard = ({ event }) => {
       ? thumbnailOptions.find((option) => option.id === type[0])
       : null;
   const [imageError, setImageError] = useState(false);
+
+  const userCount = getCount(users);
+  const stepsCount = getCount(steps);
 
   return (
     <div className="group relative bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -75,11 +79,11 @@ const EventCard = ({ event }) => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center text-gray-600">
               <span className="inline-block w-5 h-5 mr-1.5">👥</span>
-              <span className="text-sm">{users.toLocaleString()}명</span>
+              <span className="text-sm">{userCount.toLocaleString()}명</span>
             </div>
             <div className="flex items-center text-gray-600">
               <span className="inline-block w-5 h-5 mr-1.5">👤</span>
-              <span className="text-sm">스텝 {steps}명</span>
+              <span className="text-sm">스텝 {stepsCount}명</span>
             </div>
           </div>
         </div>
