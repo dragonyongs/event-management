@@ -1,10 +1,12 @@
-import { FaGolfBall, FaBus } from 'react-icons/fa';
+import { RiGolfBallLine, RiBusLine } from "react-icons/ri";
 
 const GolfInfo = ({ golfDetails }) => {
+  console.log("golfDetails", golfDetails);
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex items-center space-x-2 mb-3">
-        <FaGolfBall className="text-green-500" />
+        <RiGolfBallLine className="text-green-500" />
         <h4 className="font-semibold text-gray-900">골프 정보</h4>
       </div>
       <p className="text-sm text-gray-600">경기장: {golfDetails.venue}</p>
@@ -16,12 +18,12 @@ const GolfInfo = ({ golfDetails }) => {
         {golfDetails.groups.map((group) => (
           <div key={group.id} className="border p-2 rounded-lg">
             <h5 className="text-sm font-semibold">
-              {group.name} - 티타임: {group.teeTime}
+              {group.name} - 티타임: {group.teeTime.start} (예상 시간: {group.teeTime.estimatedDuration})
             </h5>
             <p className="text-xs text-gray-500">
-              인원: {group.members.length}명 (평균 핸디캡:{' '}
-              {averageHandicap(group.members)})
+              인원: {group.members.length}명 (평균 핸디캡: {averageHandicap(group.members)})
             </p>
+
           </div>
         ))}
       </div>
@@ -30,10 +32,12 @@ const GolfInfo = ({ golfDetails }) => {
 };
 
 const TourInfo = ({ tourDetails }) => {
+  console.log("tourDetails", tourDetails);
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex items-center space-x-2 mb-3">
-        <FaBus className="text-blue-500" />
+        <RiBusLine className="text-blue-500" />
         <h4 className="font-semibold text-gray-900">관광 정보</h4>
       </div>
       <p className="text-sm text-gray-600">
@@ -48,8 +52,7 @@ const TourInfo = ({ tourDetails }) => {
           <div key={dest.id} className="border p-2 rounded-lg">
             <h5 className="text-sm font-semibold">{dest.name}</h5>
             <p className="text-xs text-gray-500">
-              방문 시간: {dest.time} | 참여: {dest.currentCount} /{' '}
-              {dest.maxCapacity}명
+              방문 시간: {dest.schedule.start} ~ {dest.schedule.end} | 참여: {dest.currentCount} / {dest.maxCapacity}명
             </p>
           </div>
         ))}

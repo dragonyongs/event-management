@@ -19,98 +19,210 @@ const generateDummySteps = (count) => {
 
 export const sampleEventData = [
   {
-    id: 'evt_001',
-    title: '2024 제주 골프 & 관광 투어',
-    startDate: '2024-06-15',
-    endDate: '2024-06-18',
-    status: 'upcoming',
+    id: "evt_001",
+    title: "2024 제주 골프 & 관광 투어",
+    status: "upcoming",
+    // 이벤트 전체 기간: ISO 8601 형식으로 지정하여 시간 기반 계산 및 타임존 고려에 용이
+    startDate: "2024-06-15T00:00:00",
+    endDate: "2024-06-18T23:59:59",
     thumbnail: {
-      icon: '⛳',
-      bgColor: 'bg-emerald-100',
-      url: 'https://images.unsplash.com/photo-1500932334442-8761ee4810a7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      icon: "⛳",
+      bgColor: "bg-emerald-100",
+      url: "https://images.unsplash.com/photo-1500932334442-8761ee4810a7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
-    type: ['golf', 'tour'],
+    type: ["golf", "tour"],
+    // 참가자 정보
     users: [
-      { id: 'user_001', name: '김영희', role: 'participant' },
-      { id: 'user_002', name: '이철수', role: 'participant' },
+      { id: "user_001", name: "김영희", role: "participant" },
+      { id: "user_002", name: "이철수", role: "participant" }
     ],
     staffs: [],
-    steps: [
+    description: "제주도의 아름다운 자연과 함께하는 골프 & 관광 투어입니다.",
+    // 각 일자별로 세분화된 일정 등록 (일자별로 활동(activity) 목록 포함)
+    schedule: [
       {
-        id: 'step_001',
-        title: '예약 확인',
-        startTime: '09:00',
-        endTime: '10:00',
+        day: "2024-06-15",
+        activities: [
+          {
+            id: "act_001",
+            title: "예약 확인",
+            startTime: "2024-06-15T09:00:00",
+            endTime: "2024-06-15T10:00:00",
+            description: "예약 내용을 확인합니다."
+          },
+          {
+            id: "act_002",
+            title: "출발 준비",
+            startTime: "2024-06-15T10:00:00",
+            endTime: "2024-06-15T11:00:00",
+            description: "짐을 챙기고 출발 준비를 합니다."
+          }
+        ]
       },
       {
-        id: 'step_002',
-        title: '출발 준비',
-        startTime: '10:00',
-        endTime: '11:00',
+        day: "2024-06-16",
+        activities: [
+          {
+            id: "act_003",
+            title: "골프 경기 시작",
+            startTime: "2024-06-16T07:30:00",
+            endTime: "2024-06-16T11:30:00",
+            description: "골프 경기를 진행합니다."
+          }
+        ]
       },
+      {
+        day: "2024-06-17",
+        activities: [
+          {
+            id: "act_004",
+            title: "관광: 성산일출봉 방문",
+            startTime: "2024-06-17T09:00:00",
+            endTime: "2024-06-17T11:00:00",
+            description: "성산일출봉을 방문하여 주변 경관을 감상합니다."
+          },
+          {
+            id: "act_005",
+            title: "관광: 우도 방문",
+            startTime: "2024-06-17T13:00:00",
+            endTime: "2024-06-17T15:00:00",
+            description: "우도를 방문하여 해양 레포츠 및 지역 음식을 체험합니다."
+          }
+        ]
+      },
+      {
+        day: "2024-06-18",
+        activities: [
+          {
+            id: "act_006",
+            title: "귀가 준비 및 체크아웃",
+            startTime: "2024-06-18T10:00:00",
+            endTime: "2024-06-18T11:00:00",
+            description: "모든 준비를 마치고 체크아웃합니다."
+          }
+        ]
+      }
     ],
-    location: '제주도',
-    description: '제주도의 아름다운 자연과 함께하는 골프 & 관광 투어입니다.',
+    // 골프 관련 상세 정보: 그룹별 티타임, 참가자 점수 등 추가 데이터 포함
     golfDetails: {
-      venue: '제주 클럽하우스',
+      venue: "제주 클럽하우스",
+      location: "나인브릿지 골프클럽",
       groups: [
         {
-          id: 'golf_group_1',
-          name: 'A조',
-          teeTime: '07:30',
+          id: "golf_group_1",
+          name: "A조",
+          teeTime: {
+            start: "2024-06-16T07:30:00",
+            estimatedDuration: "4시간"
+          },
           members: [
-            { id: 'user_001', name: '김영희', handicap: 12 },
-            { id: 'user_002', name: '이철수', handicap: 15 },
-            { id: 'user_003', name: '박지성', handicap: 8 },
-            { id: 'user_004', name: '최민수', handicap: 20 },
-            { id: 'user_009', name: '김지훈', handicap: 10 },
-          ],
+            { id: "user_001", name: "김영희", handicap: 12, score: { total: null, holes: [] }, reason: "갑작스런 개인 일정으로 불참", status: null},
+            { id: "user_002", name: "이철수", handicap: 15, score: { total: null, holes: [
+              {
+                holeNumber: 1, // 홀 번호
+                strokes: 4, // 해당 홀에서 기록한 타수
+                par: 3, // 해당 홀의 파 수
+                scoreType: "normal", // 스코어 타입 (예: "normal", "birdie", "eagle", "bogey" 등)
+                notes: "좋은 퍼팅", // 추가 메모 (선택 사항)
+              },
+              {
+                holeNumber: 2,
+                strokes: 5,
+                par: 4,
+                scoreType: "bogey",
+                notes: "",
+              },
+              // 추가 홀 기록...
+            ] }, reason: null, status: "confirmed" },
+            { id: "user_003", name: "박지성", handicap: 8, score: { total: null, holes: [] }, reason: null, status: "confirmed" },
+            { id: "user_004", name: "최민수", handicap: 20, score: { total: null, holes: [] }, reason: null, status: "confirmed" },
+            { id: "user_009", name: "김지훈", handicap: 10, score: { total: null, holes: [] }, reason: null, status: "confirmed" }
+          ]
         },
-      ],
+        {
+          id: "golf_group_2",
+          name: "B조",
+          teeTime: {
+            start: "2024-06-16T08:00:00",
+            estimatedDuration: "4시간"
+          },
+          members: [
+            { id: "user_005", name: "홍길동", handicap: 18, score: { total: null, holes: [] }, reason: null, status: "confirmed" },
+            { id: "user_006", name: "이순신", handicap: 14, score: { total: null, holes: [] }, reason: null, status: "pending" },
+            { id: "user_007", name: "강감찬", handicap: 16, score: { total: null, holes: [] }, reason: null, status: "pending" },
+            { id: "user_008", name: "유관순", handicap: 22, score: { total: null, holes: [] }, reason: null, status: "pending" }
+          ]
+        }
+      ]
     },
+    // 투어 관련 상세 정보: 버스 그룹, 목적지 방문 일정 및 세부 일정 포함
     tourDetails: {
       busGroups: [
         {
-          id: 'bus_1',
-          name: '1호차',
+          id: "bus_1",
+          name: "1호차",
           capacity: 45,
           currentCount: 42,
-          checkInStatus: true,
+          schedule: {
+            departure: "2024-06-17T07:50:00",
+            arrival: "2024-06-17T10:00:00"
+          },
           passengers: [
-            { id: 'user_001', name: '김영희', seatNo: '1A', checkedIn: true },
-            { id: 'user_010', name: '이정민', seatNo: '1B', checkedIn: true },
-          ],
+            { id: "user_001", name: "김영희", seatNo: "1A", checkInTime: "2024-06-17T07:45:00" },
+            { id: "user_010", name: "이정민", seatNo: "1B", checkInTime: "2024-06-17T07:48:00" }
+          ]
         },
         {
-          id: 'bus_2',
-          name: '2호차',
+          id: "bus_2",
+          name: "2호차",
           capacity: 45,
           currentCount: 40,
-          checkInStatus: false,
+          schedule: {
+            departure: "2024-06-17T08:00:00",
+            arrival: "2024-06-17T10:00:00"
+          },
           passengers: [
-            { id: 'user_005', name: '홍길동', seatNo: '2A', checkedIn: false },
-            { id: 'user_006', name: '이순신', seatNo: '2B', checkedIn: false },
-            { id: 'user_011', name: '박수현', seatNo: '2C', checkedIn: false },
-          ],
-        },
+            { id: "user_005", name: "홍길동", seatNo: "2A", checkInTime: null },
+            { id: "user_006", name: "이순신", seatNo: "2B", checkInTime: null },
+            { id: "user_011", name: "박수현", seatNo: "2C", checkInTime: null }
+          ]
+        }
       ],
       destinations: [
         {
-          id: 'dest_1',
-          name: '성산일출봉',
-          time: '09:00 ~ 11:00',
+          id: "dest_1",
+          name: "성산일출봉",
+          schedule: {
+            start: "2024-06-17T09:00:00",
+            end: "2024-06-17T11:00:00"
+          },
           maxCapacity: 50,
           currentCount: 45,
+          estimatedDuration: "2시간"
         },
         {
-          id: 'dest_2',
-          name: '우도',
-          time: '13:00 ~ 15:00',
+          id: "dest_2",
+          name: "우도",
+          schedule: {
+            start: "2024-06-17T13:00:00",
+            end: "2024-06-17T15:00:00"
+          },
           maxCapacity: 40,
           currentCount: 30,
-        },
+          estimatedDuration: "2시간"
+        }
       ],
+      location: "제주 공항",
+      totalDuration: "4일 3박"
     },
+    // 일정 변경 및 업데이트 이력 (선택 사항)
+    updateLogs: [
+      {
+        id: "log_001",
+        timestamp: "2024-05-01T12:00:00",
+        changes: "초기 일정 생성"
+      }
+    ]
   },
   {
     id: 'evt_002',
@@ -150,6 +262,8 @@ export const sampleEventData = [
         endTime: '12:00',
       },
     ],
+    tourDetails: [],
+    golfDetails: [],
     location: '서울',
     description: '서울에서 열리는 해커톤 대회입니다.',
   },

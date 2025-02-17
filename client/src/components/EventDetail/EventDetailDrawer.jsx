@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { thumbnailOptions } from '../../data/eventData';
-import { GolfInfo, TourInfo } from './EventDetailSections';
+import EventDetailSummary from './EventDetailSummary';
 import { getCount } from '../../utils/eventUtils';
 
 const EventDetailDrawer = ({ event, onClose, onViewFullScreen }) => {
@@ -77,13 +77,8 @@ const EventDetailDrawer = ({ event, onClose, onViewFullScreen }) => {
             </div>
 
             {/* 이벤트 유형별 정보 */}
-            {event.type?.includes('golf') && (
-              <GolfInfo golfDetails={event.golfDetails} />
-            )}
+            { event?.type && <EventDetailSummary event={event} /> }
 
-            {event.type?.includes('tour') && (
-              <TourInfo tourDetails={event.tourDetails} />
-            )}
           </div>
         </div>
       </div>
