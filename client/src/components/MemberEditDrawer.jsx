@@ -2,16 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { FiX, FiPlus, FiTrash2 } from 'react-icons/fi';
 
 const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
-  const [newMemberData, setNewMemberData] = useState({
-    ...memberData,
-    score: memberData?.score || { total: '', holes: [] }
-  });
+  // memberData가 null일 가능성에 대비해 기본값 설정
+  const getInitialData = (data) => {
+    if (!data) {
+      return {
+        id: '',
+        name: '',
+        handicap: '',
+        score: { total: '', holes: [] },
+        reason: '',
+        status: 'pending',
+      };
+    }
+    return {
+      id: data.id || '',
+      name: data.name || '',
+      handicap: data.handicap ?? '',
+      score: {
+        total: data.score?.total ?? '',
+        holes: data.score?.holes || [],
+      },
+      reason: data.reason ?? '',
+      status: data.status || 'pending',
+    };
+  };
+
+  const [newMemberData, setNewMemberData] = useState(getInitialData(memberData));
 
   useEffect(() => {
-    setNewMemberData({
-      ...memberData,
-      score: memberData?.score || { total: '', holes: [] }
-    });
+    if (memberData) {
+      setNewMemberData(getInitialData(memberData));
+    }
   }, [memberData]);
 
   const handleSubmit = () => {
@@ -68,6 +89,7 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        {/* 기본 정보 입력 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">이름</label>
           <input
@@ -97,7 +119,7 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">불참 사유</label>
             <textarea
-              value={newMemberData.reason || ''}
+              value={newMemberData.reason ?? ''}
               onChange={(e) =>
                 setNewMemberData({ ...newMemberData, reason: e.target.value })
               }
@@ -111,7 +133,7 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
           <label className="block text-sm font-medium text-gray-700 mb-2">핸디캡</label>
           <input
             type="number"
-            value={newMemberData.handicap}
+            value={newMemberData.handicap ?? ''}
             onChange={(e) =>
               setNewMemberData({ ...newMemberData, handicap: Number(e.target.value) })
             }
@@ -120,13 +142,15 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
             max="72"
           />
         </div>
+
+        {/* 점수 관리 섹션 */}
         <div className="border-t pt-4">
           <h4 className="text-md font-semibold mb-2">점수 관리</h4>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">총 점수</label>
             <input
               type="number"
-              value={newMemberData.score.total || ''}
+              value={newMemberData.score.total ?? ''}
               onChange={(e) =>
                 setNewMemberData({
                   ...newMemberData,
@@ -146,7 +170,11 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
               <div key={index} className="mb-4 p-4 border rounded-lg">
                 <div className="flex justify-between items-center mb-2">
                   <span>홀 {hole.holeNumber}</span>
-                  <button type="button" onClick={() => removeHole(index)} className="text-red-500">
+                  <button
+                    type="button"
+                    onClick={() => removeHole(index)}
+                    className="text-red-500"
+                  >
                     <FiTrash2 />
                   </button>
                 </div>
@@ -155,8 +183,10 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">타수</label>
                     <input
                       type="number"
-                      value={hole.strokes}
-                      onChange={(e) => updateHoleField(index, 'strokes', Number(e.target.value))}
+                      value={hole.strokes ?? ''}
+                      onChange={(e) =>
+                        updateHoleField(index, 'strokes', Number(e.target.value))
+                      }
                       className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
@@ -164,16 +194,20 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">파</label>
                     <input
                       type="number"
-                      value={hole.par}
-                      onChange={(e) => updateHoleField(index, 'par', Number(e.target.value))}
+                      value={hole.par ?? ''}
+                      onChange={(e) =>
+                        updateHoleField(index, 'par', Number(e.target.value))
+                      }
                       className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">스코어 타입</label>
                     <select
-                      value={hole.scoreType}
-                      onChange={(e) => updateHoleField(index, 'scoreType', e.target.value)}
+                      value={hole.scoreType || ''}
+                      onChange={(e) =>
+                        updateHoleField(index, 'scoreType', e.target.value)
+                      }
                       className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="normal">Normal</option>
@@ -186,15 +220,21 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">노트</label>
                     <input
                       type="text"
-                      value={hole.notes}
-                      onChange={(e) => updateHoleField(index, 'notes', e.target.value)}
+                      value={hole.notes || ''}
+                      onChange={(e) =>
+                        updateHoleField(index, 'notes', e.target.value)
+                      }
                       className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
               </div>
             ))}
-            <button type="button" onClick={addHole} className="flex items-center text-blue-500 hover:underline mt-2">
+            <button
+              type="button"
+              onClick={addHole}
+              className="flex items-center text-blue-500 hover:underline mt-2"
+            >
               <FiPlus className="mr-1" /> 홀 추가
             </button>
           </div>

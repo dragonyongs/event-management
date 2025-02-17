@@ -140,17 +140,41 @@ const EventDetail = () => {
 
     // 멤버 정보 수정 완료 후 처리
     const handleMemberSubmit = (updatedMember) => {
-        // 현재 그룹 폼에 반영 (추가/수정 로직)
-        setGroupForm((prev) => ({
-            ...prev,
-            members: prev.members.map((member) =>
-                member.id === updatedMember.id ? updatedMember : member
-            ),
-        }));
+        // groupForm 업데이트 및 eventList 동기화
+        setGroupForm((prevGroup) => {
+            const updatedGroup = {
+                ...prevGroup,
+                members: prevGroup.members.map((m) =>
+                m.id === updatedMember.id ? updatedMember : m
+                ),
+        };
+    
+        // 이미 저장된 그룹(수정 모드)인 경우 eventList의 해당 그룹도 업데이트
+        if (updatedGroup.id) {
+            setEventList((prevEventList) =>
+            prevEventList.map((event) => {
+                if (event.id === id && activeTab === 'golf') {
+                const updatedGroups = event.golfDetails.groups.map((group) =>
+                    group.id === updatedGroup.id ? updatedGroup : group
+                );
+                return {
+                    ...event,
+                    golfDetails: {
+                    ...event.golfDetails,
+                    groups: updatedGroups,
+                    },
+                };
+                }
+                return event;
+            })
+            );
+        }
+    
+        return updatedGroup;
+        });
         setMemberForm(null);
         setIsMemberEditOpen(false);
     };
-    
     if (!eventData) {
         return <div>이벤트를 찾을 수 없습니다.</div>;
     }
