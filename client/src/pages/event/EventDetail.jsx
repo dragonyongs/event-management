@@ -7,8 +7,19 @@ import GolfManagement from '../../components/EventDetail/GolfManagement';
 import TourManagement from '../../components/EventDetail/TourManagement';
 import { sampleEventData } from '../../data/eventData';
 import AddGroupDrawer from '../../components/EventDetail/AddGroupDrawer';
+import MemberEditDrawer from '../../components/MemberEditDrawer';
+
 import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
+
+const initialGroupForm = {
+    name: '',
+    capacity: '',
+    time: '',
+    description: '',
+    teeTime: { start: '', estimatedDuration: '' },
+    members: [],
+};
 
 const EventDetail = () => {
     const { id } = useParams();
@@ -16,12 +27,27 @@ const EventDetail = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [eventList, setEventList] = useState(sampleEventData);
+    const [selectedGroupDatas, setSelectedGroupDatas] = useState(null);
+
+    // 멤버 편집 관련 상태를 최상위로 끌어올림
+    const [memberForm, setMemberForm] = useState(null);
+    const [isMemberEditOpen, setIsMemberEditOpen] = useState(false);
+    
+    // 드로우 내부 폼 상태를 최상위로 올림
+    const [groupForm, setGroupForm] = useState(initialGroupForm);
 
     // 실제 구현시 API로 데이터 fetch
     const eventData = eventList.find((event) => event.id === id);
 
-    const openAddGroupDrawer = (type) => {
+    const openAddGroupDrawer = (type, group) => {
         setDrawerContent(type);
+        if (group) {
+            setSelectedGroupDatas(group);
+            setGroupForm(group);
+        } else {
+            setSelectedGroupDatas(null);
+            setGroupForm(initialGroupForm);
+        }
         setIsDrawerOpen(true);
     };
 
@@ -81,9 +107,50 @@ const EventDetail = () => {
             event.id === id ? updatedEvent : event
         );
         setEventList(updatedEventList);
-        setIsDrawerOpen(false);
+        handleCloseDrawer(); // 닫으면서 상태 초기화
     };
 
+    // 드로어 닫을 때 모든 관련 상태 초기화
+    const handleCloseDrawer = () => {
+        setIsDrawerOpen(false);
+        setSelectedGroupDatas(null);
+        setGroupForm(initialGroupForm);
+    };
+
+    // 멤버 추가 함수 (최상위로 리프팅)
+    const handleAddMember = () => {
+        const newMember = {
+        id: Date.now(),
+        name: '',
+        status: 'pending',
+        handicap: 0,
+        reason: '',
+        score: { total: '', holes: [] },
+        };
+        setMemberForm(newMember);
+        setIsMemberEditOpen(true);
+    };
+
+    // 상위에서 멤버 편집 드로어를 제어하는 함수
+    const handleEditMember = (groupId, member) => {
+        // 필요하다면 groupId를 이용해 어떤 그룹의 멤버인지 구분
+        setMemberForm(member);
+        setIsMemberEditOpen(true);
+    };
+
+    // 멤버 정보 수정 완료 후 처리
+    const handleMemberSubmit = (updatedMember) => {
+        // 현재 그룹 폼에 반영 (추가/수정 로직)
+        setGroupForm((prev) => ({
+            ...prev,
+            members: prev.members.map((member) =>
+                member.id === updatedMember.id ? updatedMember : member
+            ),
+        }));
+        setMemberForm(null);
+        setIsMemberEditOpen(false);
+    };
+    
     if (!eventData) {
         return <div>이벤트를 찾을 수 없습니다.</div>;
     }
@@ -104,9 +171,9 @@ const EventDetail = () => {
                     {activeTab === 'golf' && (
                         <GolfManagement
                             data={eventData.golfDetails}
-                            groups={eventData.golfDetails.groups}
                             onAddGroup={() => openAddGroupDrawer('golf')}
                             onEditGroup={(group) => openAddGroupDrawer('golf', group)}
+                            onEditMember={handleEditMember}
                         />
                     )}
                     {activeTab === 'tour' && (
@@ -120,15 +187,41 @@ const EventDetail = () => {
             </div>
             <Drawer
                 open={isDrawerOpen}
-                onClose={() => setIsDrawerOpen(false)}
+                onClose={handleCloseDrawer}
                 direction="right"
                 size={480}
                 className="overflow-y-auto"
             >
                 <AddGroupDrawer
                     type={drawerContent}
+                    groupForm={groupForm}
+                    setGroupForm={setGroupForm}
                     onSubmit={handleGroupSubmit}
-                    onClose={() => setIsDrawerOpen(false)}
+                    onClose={handleCloseDrawer}
+                    onAddMember={handleAddMember}
+                    onEditMember={handleEditMember}
+                />
+            </Drawer>
+
+
+            {/* 멤버 편집 드로어: 그룹 드로어와 독립적으로 렌더링 */}
+            <Drawer
+                open={isMemberEditOpen}
+                onClose={() => {
+                    setIsMemberEditOpen(false);
+                    setMemberForm(null);
+                }}
+                direction="right"
+                size={480}
+                className="overflow-y-auto"
+            >
+                <MemberEditDrawer
+                memberData={memberForm}
+                onClose={() => {
+                    setIsMemberEditOpen(false);
+                    setMemberForm(null);
+                }}
+                onSubmit={handleMemberSubmit}
                 />
             </Drawer>
         </div>

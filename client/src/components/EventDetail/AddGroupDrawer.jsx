@@ -1,75 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import MemberEditDrawer from '../MemberEditDrawer'; // MemberEditDrawer 임포트 추가
+import React, { useEffect } from 'react';
+// import MemberEditDrawer from '../MemberEditDrawer';
 
-const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
-  const [newGroupData, setNewGroupData] = useState({
-    name: '',
-    capacity: '',
-    time: '',
-    description: '',
-    teeTime: { start: '', estimatedDuration: '' },
-    members: [], // 사용자 필드 추가
-  });
+const AddGroupDrawer = ({
+  isEdit,
+  type,
+  groupForm,
+  setGroupForm,
+  onSubmit,
+  onClose,
+  onAddMember,     // 전달받은 handleAddMember
+  onEditMember,    // 전달받은 handleEditMember (필요시)
+}) => {
 
-  const [isMemberEditOpen, setIsMemberEditOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState(null);
+  // 드로우 내 폼 입력 변경 핸들러 예시
+  const handleChange = (field, value) => {
+    setGroupForm({
+      ...groupForm,
+      [field]: value,
+    });
+  };
 
-  useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      newGroupData(initialData);
-    }
-  }, [initialData]);
+  const handleTeeTimeChange = (field, value) => {
+    setGroupForm({
+      ...groupForm,
+      teeTime: {
+        ...groupForm.teeTime,
+        [field]: value,
+      },
+    });
+  };
 
   const handleSubmit = () => {
-    onSubmit(newGroupData);
-  };
-
-  const handleAddMember = () => {
-    const newMember = { id: Date.now(), name: '', status: 'pending', handicap: 0, reason: '' };
-    setSelectedMember(newMember);
-    setIsMemberEditOpen(true);
-  };
-
-  const handleEditMember = (member) => {
-    setSelectedMember(member);
-    setIsMemberEditOpen(true);
-  };
-
-  const handleMemberSubmit = (member) => {
-    setNewGroupData((prevData) => ({
-      ...prevData,
-      members: [...prevData.members.filter((m) => m.id !== member.id), member],
-    }));
-    setIsMemberEditOpen(false);
+    onSubmit(groupForm);
   };
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-4 border-b">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900">
-            {type === 'golf'
-              ? '골프 조 추가'
-              : type === 'bus'
-              ? '버스 그룹 추가'
-              : '관광지 추가'}
-          </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
+      <div className="p-4 border-b flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-gray-900">
+          {type === 'golf'
+            ? '골프 조 추가'
+            : type === 'bus'
+            ? '버스 그룹 추가'
+            : '관광지 추가'}
+        </h2>
+        <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+          {/* 닫기 버튼 SVG */}
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
@@ -83,10 +63,8 @@ const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
           </label>
           <input
             type="text"
-            value={newGroupData.name}
-            onChange={(e) =>
-              setNewGroupData({ ...newGroupData, name: e.target.value })
-            }
+            value={groupForm.name}
+            onChange={(e) => handleChange('name', e.target.value)}
             className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="이름을 입력하세요"
           />
@@ -94,33 +72,21 @@ const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
 
         {type === 'golf' && (
           <>
-            {/* TeeTime 시작 시간 입력 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Tee-off 시작 시간</label>
               <input
                 type="datetime-local"
-                value={newGroupData.teeTime.start}
-                onChange={(e) =>
-                  setNewGroupData({
-                    ...newGroupData,
-                    teeTime: { ...newGroupData.teeTime, start: e.target.value },
-                  })
-                }
+                value={groupForm.teeTime.start}
+                onChange={(e) => handleTeeTimeChange('start', e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-            {/* 예상 지속 시간 입력 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">예상 지속 시간</label>
               <input
                 type="text"
-                value={newGroupData.teeTime.estimatedDuration}
-                onChange={(e) =>
-                  setNewGroupData({
-                    ...newGroupData,
-                    teeTime: { ...newGroupData.teeTime, estimatedDuration: e.target.value },
-                  })
-                }
+                value={groupForm.teeTime.estimatedDuration}
+                onChange={(e) => handleTeeTimeChange('estimatedDuration', e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="예: 4시간"
               />
@@ -135,10 +101,8 @@ const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
             </label>
             <input
               type="number"
-              value={newGroupData.capacity}
-              onChange={(e) =>
-                setNewGroupData({ ...newGroupData, capacity: e.target.value })
-              }
+              value={groupForm.capacity}
+              onChange={(e) => handleChange('capacity', e.target.value)}
               className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="숫자만 입력"
             />
@@ -153,10 +117,8 @@ const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
               </label>
               <input
                 type="text"
-                value={newGroupData.time}
-                onChange={(e) =>
-                  setNewGroupData({ ...newGroupData, time: e.target.value })
-                }
+                value={groupForm.time}
+                onChange={(e) => handleChange('time', e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="예: 09:00 ~ 11:00"
               />
@@ -166,10 +128,8 @@ const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
                 설명
               </label>
               <textarea
-                value={newGroupData.description}
-                onChange={(e) =>
-                  setNewGroupData({ ...newGroupData, description: e.target.value })
-                }
+                value={groupForm.description}
+                onChange={(e) => handleChange('description', e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 rows={3}
                 placeholder="관광지에 대한 간단한 설명을 입력하세요"
@@ -185,13 +145,13 @@ const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
             </label>
             <button
               type="button"
-              onClick={handleAddMember}
+              onClick={onAddMember}
               className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               참가자 추가
             </button>
             <ul className="mt-4 space-y-2">
-              {newGroupData.members.map((member) => (
+              {groupForm.members.map((member) => (
                 <li
                   key={member.id}
                   className="flex justify-between items-center p-2 border rounded-lg"
@@ -199,7 +159,7 @@ const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
                   <span>{member.name}</span>
                   <button
                     type="button"
-                    onClick={() => handleEditMember(member)}
+                    onClick={() => onEditMember(null, member)}
                     className="text-blue-500 hover:underline"
                   >
                     수정
@@ -215,20 +175,28 @@ const AddGroupDrawer = ({ type, initialData = {}, onSubmit, onClose }) => {
             onClick={handleSubmit}
             className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
           >
-            {initialData && Object.keys(initialData).length > 0 ? '수정하기' : '추가하기'}
+            {isEdit ? '수정하기' : '추가하기'}
           </button>
         </div>
       </div>
 
-      {isMemberEditOpen && (
+      {/* 멤버 편집 드로우: 최상위에서 관리한 memberForm 상태를 이용 */}
+      {/* {memberForm && (
         <div className='bg-black bg-opacity-50 h-screen'>
           <MemberEditDrawer
-            memberData={selectedMember}
-            onClose={() => setIsMemberEditOpen(false)}
-            onSubmit={handleMemberSubmit}
+            memberData={memberForm}
+            onClose={() => setMemberForm(null)}
+            onSubmit={(updatedMember) => {
+              // 그룹의 멤버 리스트 갱신
+              setGroupForm((prev) => ({
+                ...prev,
+                members: [...prev.members.filter(m => m.id !== updatedMember.id), updatedMember],
+              }));
+              setMemberForm(null);
+            }}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

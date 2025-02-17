@@ -2,7 +2,7 @@ import React from 'react';
 import { FiPlus, FiClock, FiUser, FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 const GolfManagement = ({ 
-  groups, 
+  data,
   onAddGroup, 
   onEditGroup, 
   onDeleteGroup, 
@@ -33,7 +33,7 @@ const GolfManagement = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {groups.map((group) => (
+        {data.groups.map((group) => (
           <div 
             key={group.id} 
             className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-100"
@@ -79,7 +79,7 @@ const GolfManagement = ({
               {group.members.map((member) => (
                 <li 
                   key={member.id} 
-                  className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${getStatusStyles(member.status)}`}
+                  className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 cursor-pointer ${getStatusStyles(member.status)}`}
                   onClick={() => onEditMember(group.id, member)}
                 >
                   <div className="flex items-center">

@@ -116,7 +116,7 @@ export const sampleEventData = [
             estimatedDuration: "4시간"
           },
           members: [
-            { id: "user_001", name: "김영희", handicap: 12, score: { total: null, holes: [] }, reason: "갑작스런 개인 일정으로 불참", status: null},
+            { id: "user_001", name: "김영희", handicap: 12, score: { total: null, holes: [] }, reason: "갑작스런 개인 일정으로 불참", status: "cancelled"},
             { id: "user_002", name: "이철수", handicap: 15, score: { total: null, holes: [
               {
                 holeNumber: 1, // 홀 번호
