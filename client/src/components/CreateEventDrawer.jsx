@@ -270,9 +270,26 @@ const CreateEventDrawer = ({ isOpen, onClose, handleCreateEvent }) => {
         </div>
         {/* 사용자 추가 UI */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            사용자 추가
-          </label>
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-sm font-medium text-gray-700">
+              사용자 추가
+            </label>
+            {/* 엑셀 파일 업로드 기능 추가 */}
+            <div>
+              <label
+                htmlFor="user-upload"
+                className="text-sm text-blue-600 rounded-lg cursor-pointer hover:underline "
+              >
+                엑셀 업로드
+              </label>
+              <input
+                type="file"
+                id="user-upload"
+                className="hidden"
+                accept=".xlsx, .xls"
+              />
+              </div>
+          </div>
           <input
             type="text"
             value={userSearch}

@@ -33,8 +33,9 @@ export const sampleEventData = [
     type: ["golf", "tour"],
     // 참가자 정보
     users: [
-      { id: "user_001", name: "김영희", role: "participant" },
-      { id: "user_002", name: "이철수", role: "participant" }
+      { id: "user_001", name: "김영희", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [] },
+      { id: "user_002", name: "이철수", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [] },
+      { id: "user_003", name: "박지성", company: "", position: "", role: "participant", contact: "", inviter: "", notes: []},
     ],
     staffs: [],
     description: "제주도의 아름다운 자연과 함께하는 골프 & 관광 투어입니다.",

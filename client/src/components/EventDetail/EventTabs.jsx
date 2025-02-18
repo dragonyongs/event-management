@@ -1,12 +1,10 @@
 const EventTabs = ({ activeTab, setActiveTab, eventTypes }) => {
   const tabs = [
+    // 사용자 관리 추가
     { id: 'overview', label: '개요' },
-    ...(eventTypes.includes('golf')
-      ? [{ id: 'golf', label: '골프 관리' }]
-      : []),
-    ...(eventTypes.includes('tour')
-      ? [{ id: 'tour', label: '관광 관리' }]
-      : []),
+    ...(eventTypes.includes('user') ? [{ id: 'user', label: '사용자 관리' }] : []),
+    ...(eventTypes.includes('golf') ? [{ id: 'golf', label: '골프 관리' }] : []),
+    ...(eventTypes.includes('tour') ? [{ id: 'tour', label: '관광 관리' }] : []),
   ];
 
   return (
