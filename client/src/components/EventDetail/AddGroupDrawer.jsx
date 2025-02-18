@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-// import MemberEditDrawer from '../MemberEditDrawer';
+import React from 'react';
+import { FiPlus, FiX, FiUser } from 'react-icons/fi';
 
 const AddGroupDrawer = ({
   isEdit,
@@ -8,11 +8,9 @@ const AddGroupDrawer = ({
   setGroupForm,
   onSubmit,
   onClose,
-  onAddMember,     // 전달받은 handleAddMember
-  onEditMember,    // 전달받은 handleEditMember (필요시)
+  onAddMember,
+  onEditMember,
 }) => {
-
-  // 드로우 내 폼 입력 변경 핸들러 예시
   const handleChange = (field, value) => {
     setGroupForm({
       ...groupForm,
@@ -30,173 +28,111 @@ const AddGroupDrawer = ({
     });
   };
 
-  const handleSubmit = () => {
-    onSubmit(groupForm);
-  };
-
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-4 border-b flex justify-between items-center">
+    <div className="h-full flex flex-col bg-white">
+      {/* Header */}
+      <div className="px-6 py-4 border-b flex justify-between items-center">
         <h2 className="text-lg font-semibold text-gray-900">
-          {type === 'golf'
-            ? '골프 조 추가'
-            : type === 'bus'
-            ? '버스 그룹 추가'
-            : '관광지 추가'}
+          {type === 'golf' ? '골프 조 추가' : type === 'bus' ? '버스 그룹 추가' : '관광지 추가'}
         </h2>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
-          {/* 닫기 버튼 SVG */}
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+        <button 
+          onClick={onClose}
+          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          <FiX className="w-5 h-5 text-gray-500" />
         </button>
       </div>
 
-      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {type === 'golf'
-              ? '조 이름'
-              : type === 'bus'
-              ? '버스 이름'
-              : '관광지 이름'}
-          </label>
-          <input
-            type="text"
-            value={groupForm.name}
-            onChange={(e) => handleChange('name', e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="이름을 입력하세요"
-          />
-        </div>
-
-        {type === 'golf' && (
-          <>
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-6 space-y-6">
+          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tee-off 시작 시간</label>
-              <input
-                type="datetime-local"
-                value={groupForm.teeTime.start}
-                onChange={(e) => handleTeeTimeChange('start', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">예상 지속 시간</label>
-              <input
-                type="text"
-                value={groupForm.teeTime.estimatedDuration}
-                onChange={(e) => handleTeeTimeChange('estimatedDuration', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="예: 4시간"
-              />
-            </div>
-          </>
-        )}
-
-        {type === 'bus' && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              정원
-            </label>
-            <input
-              type="number"
-              value={groupForm.capacity}
-              onChange={(e) => handleChange('capacity', e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="숫자만 입력"
-            />
-          </div>
-        )}
-
-        {type === 'destination' && (
-          <>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                관광 시간
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {type === 'golf' ? '조 이름' : type === 'bus' ? '버스 이름' : '관광지 이름'}
               </label>
               <input
                 type="text"
-                value={groupForm.time}
-                onChange={(e) => handleChange('time', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="예: 09:00 ~ 11:00"
+                value={groupForm.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="이름을 입력하세요"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                설명
-              </label>
-              <textarea
-                value={groupForm.description}
-                onChange={(e) => handleChange('description', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                rows={3}
-                placeholder="관광지에 대한 간단한 설명을 입력하세요"
-              />
-            </div>
-          </>
-        )}
 
-        {type === 'golf' && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              참가자
-            </label>
-            <button
-              type="button"
-              onClick={onAddMember}
-              className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              참가자 추가
-            </button>
-            <ul className="mt-4 space-y-2">
-              {groupForm.members.map((member) => (
-                <li
-                  key={member.id}
-                  className="flex justify-between items-center p-2 border rounded-lg"
+            {type === 'golf' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Tee-off 시작 시간
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={groupForm.teeTime.start}
+                    onChange={(e) => handleTeeTimeChange('start', e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    예상 지속 시간
+                  </label>
+                  <input
+                    type="text"
+                    value={groupForm.teeTime.estimatedDuration}
+                    onChange={(e) => handleTeeTimeChange('estimatedDuration', e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="예: 4시간"
+                  />
+                </div>
+              </>
+            )}
+
+            {type === 'golf' && (
+              <div className="pt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  참가자 관리
+                </label>
+                <button
+                  type="button"
+                  onClick={onAddMember}
+                  className="w-full p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 text-gray-600"
                 >
-                  <span>{member.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => onEditMember(null, member)}
-                    className="text-blue-500 hover:underline"
-                  >
-                    수정
-                  </button>
-                </li>
-              ))}
-            </ul>
+                  <FiUser className="w-5 h-5" />
+                  <span>참가자 추가</span>
+                </button>
+                <ul className="mt-4 space-y-2">
+                  {groupForm.members.map((member) => (
+                    <li
+                      key={member.id}
+                      className="flex justify-between items-center p-3 bg-white border rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <span className="font-medium">{member.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => onEditMember(null, member)}
+                        className="text-blue-500 hover:text-blue-600 transition-colors"
+                      >
+                        수정
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-        )}
-
-        <div className="pt-4">
-          <button
-            onClick={handleSubmit}
-            className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            {isEdit ? '수정하기' : '추가하기'}
-          </button>
         </div>
       </div>
 
-      {/* 멤버 편집 드로우: 최상위에서 관리한 memberForm 상태를 이용 */}
-      {/* {memberForm && (
-        <div className='bg-black bg-opacity-50 h-screen'>
-          <MemberEditDrawer
-            memberData={memberForm}
-            onClose={() => setMemberForm(null)}
-            onSubmit={(updatedMember) => {
-              // 그룹의 멤버 리스트 갱신
-              setGroupForm((prev) => ({
-                ...prev,
-                members: [...prev.members.filter(m => m.id !== updatedMember.id), updatedMember],
-              }));
-              setMemberForm(null);
-            }}
-          />
-        </div>
-      )} */}
+      {/* Footer */}
+      <div className="px-6 py-4 border-t bg-white">
+        <button
+          onClick={() => onSubmit(groupForm)}
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+        >
+          {isEdit ? '수정하기' : '저장하기'}
+        </button>
+      </div>
     </div>
   );
 };
