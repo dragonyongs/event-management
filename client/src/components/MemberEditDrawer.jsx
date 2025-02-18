@@ -61,6 +61,10 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
     }));
   };
 
+  const handleSubmit = () => {  
+    onSubmit(newMemberData);
+  }
+
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
@@ -237,7 +241,7 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
       <div className="px-6 py-4 border-t bg-white">
         <button
           type="button"
-          onClick={() => onSubmit(newMemberData)}
+          onClick={handleSubmit}
           className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
         >
           저장하기

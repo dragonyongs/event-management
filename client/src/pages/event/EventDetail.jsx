@@ -118,14 +118,14 @@ const EventDetail = () => {
     };
 
     // 멤버 추가 함수 (최상위로 리프팅)
-    const handleAddMember = () => {
+    const handleAddMember = (member) => {
         const newMember = {
-        id: Date.now(),
-        name: '',
-        status: 'pending',
-        handicap: 0,
-        reason: '',
-        score: { total: '', holes: [] },
+            id: Date.now(),
+            name: member?.name || '',
+            status: 'pending',
+            handicap: 0,
+            reason: '',
+            score: { total: '', holes: [] },
         };
         setMemberForm(newMember);
         setIsMemberEditOpen(true);
@@ -140,44 +140,77 @@ const EventDetail = () => {
 
     // 멤버 정보 수정 완료 후 처리
     const handleMemberSubmit = (updatedMember) => {
-        // groupForm 업데이트 및 eventList 동기화
-        setGroupForm((prevGroup) => {
+        // groupForm의 members 배열 업데이트
+        setGroupForm(prevGroup => {
+            // 이미 존재하는 멤버인지 확인
+            const memberExists = prevGroup.members.some(m => m.id === updatedMember.id);
+            
+            // members 배열 업데이트
+            const updatedMembers = memberExists
+                ? prevGroup.members.map(m => m.id === updatedMember.id ? updatedMember : m)
+                : [...prevGroup.members, updatedMember];
+    
             const updatedGroup = {
                 ...prevGroup,
-                members: prevGroup.members.map((m) =>
-                m.id === updatedMember.id ? updatedMember : m
-                ),
-        };
+                members: updatedMembers
+            };
     
-        // 이미 저장된 그룹(수정 모드)인 경우 eventList의 해당 그룹도 업데이트
-        if (updatedGroup.id) {
-            setEventList((prevEventList) =>
-            prevEventList.map((event) => {
-                if (event.id === id && activeTab === 'golf') {
-                const updatedGroups = event.golfDetails.groups.map((group) =>
-                    group.id === updatedGroup.id ? updatedGroup : group
-                );
-                return {
-                    ...event,
-                    golfDetails: {
-                    ...event.golfDetails,
-                    groups: updatedGroups,
-                    },
-                };
-                }
-                return event;
-            })
-            );
-        }
+            // eventList 상태 업데이트
+            setEventList(prevEventList => {
+                return prevEventList.map(event => {
+                    if (event.id === id) {
+                        // 현재 활성화된 탭이 golf인 경우
+                        if (activeTab === 'golf') {
+                            const updatedGroups = event.golfDetails.groups.map(group => {
+                                // 현재 수정 중인 그룹인 경우
+                                if (group.id === updatedGroup.id) {
+                                    return updatedGroup;
+                                }
+                                return group;
+                            });
     
-        return updatedGroup;
+                            return {
+                                ...event,
+                                golfDetails: {
+                                    ...event.golfDetails,
+                                    groups: updatedGroups
+                                }
+                            };
+                        }
+                        // 추후 tour 탭에 대한 처리도 추가 가능
+                    }
+                    return event;
+                });
+            });
+    
+            return updatedGroup;
         });
+    
+        // 멤버 편집 드로어 닫기
         setMemberForm(null);
         setIsMemberEditOpen(false);
     };
+    
     if (!eventData) {
         return <div>이벤트를 찾을 수 없습니다.</div>;
     }
+    
+    // onDeleteGroup에서 전달 받은 groupId를 이용해 해당 그룹을 삭제하는 함수
+    const handleDeleteGroup = (groupId) => {
+        const updatedEvent = {
+            ...eventData,
+            golfDetails: {
+                ...eventData.golfDetails,
+                groups: eventData.golfDetails.groups.filter(
+                    (group) => group.id !== groupId
+                ),
+            },
+        };
+        const updatedEventList = eventList.map((event) =>
+            event.id === id ? updatedEvent : event
+        );
+        setEventList(updatedEventList);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -197,6 +230,8 @@ const EventDetail = () => {
                             data={eventData.golfDetails}
                             onAddGroup={() => openAddGroupDrawer('golf')}
                             onEditGroup={(group) => openAddGroupDrawer('golf', group)}
+                            onDeleteGroup={(groupId) => handleDeleteGroup(groupId)}   
+                            onAddMember={handleAddMember}
                             onEditMember={handleEditMember}
                         />
                     )}

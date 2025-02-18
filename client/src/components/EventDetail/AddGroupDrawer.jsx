@@ -28,6 +28,10 @@ const AddGroupDrawer = ({
     });
   };
 
+  const handleSubmit = () => {
+    onSubmit(groupForm);
+  };
+
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
@@ -120,6 +124,50 @@ const AddGroupDrawer = ({
                 </ul>
               </div>
             )}
+
+            {type === 'bus' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  정원
+                </label>
+                <input
+                  type="number"
+                  value={groupForm.capacity}
+                  onChange={(e) => handleChange('capacity', e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="숫자만 입력"
+                />
+              </div>
+            )}
+
+            {type === 'destination' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    관광 시간
+                  </label>
+                  <input
+                    type="text"
+                    value={groupForm.time}
+                    onChange={(e) => handleChange('time', e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="예: 09:00 ~ 11:00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    설명
+                  </label>
+                  <textarea
+                    value={groupForm.description}
+                    onChange={(e) => handleChange('description', e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    rows={3}
+                    placeholder="관광지에 대한 간단한 설명을 입력하세요"
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -127,7 +175,7 @@ const AddGroupDrawer = ({
       {/* Footer */}
       <div className="px-6 py-4 border-t bg-white">
         <button
-          onClick={() => onSubmit(groupForm)}
+          onClick={handleSubmit}
           className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
         >
           {isEdit ? '수정하기' : '저장하기'}
