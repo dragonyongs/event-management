@@ -153,6 +153,16 @@ export const sampleEventData = [
             { id: "user_007", name: "강감찬", handicap: 16, score: { total: null, holes: [] }, reason: null, status: "pending" },
             { id: "user_008", name: "유관순", handicap: 22, score: { total: null, holes: [] }, reason: null, status: "pending" }
           ]
+        },
+        {
+          id: "golf_group_3",
+          name: "C조",
+          teeTime: {
+            start: "2025-07-16T08:00:00",
+            estimatedDuration: "4시간"
+          },
+          members: [
+          ]
         }
       ]
     },

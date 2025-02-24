@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiPlus, FiX, FiUser } from 'react-icons/fi';
+import { FiX } from 'react-icons/fi';
 
 const AddGroupDrawer = ({
   isEdit,
@@ -8,8 +8,6 @@ const AddGroupDrawer = ({
   setGroupForm,
   onSubmit,
   onClose,
-  onAddMember,
-  onEditMember,
 }) => {
   const handleChange = (field, value) => {
     setGroupForm({
@@ -90,39 +88,6 @@ const AddGroupDrawer = ({
                   />
                 </div>
               </>
-            )}
-
-            {type === 'golf' && (
-              <div className="pt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  참가자 관리
-                </label>
-                <button
-                  type="button"
-                  onClick={onAddMember}
-                  className="w-full p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 text-gray-600"
-                >
-                  <FiUser className="w-5 h-5" />
-                  <span>참가자 추가</span>
-                </button>
-                <ul className="mt-4 space-y-2">
-                  {groupForm.members.map((member) => (
-                    <li
-                      key={member.id}
-                      className="flex justify-between items-center p-3 bg-white border rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      <span className="font-medium">{member.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => onEditMember(null, member)}
-                        className="text-blue-500 hover:text-blue-600 transition-colors"
-                      >
-                        수정
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             )}
 
             {type === 'bus' && (

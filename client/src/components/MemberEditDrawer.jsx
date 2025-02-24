@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { FiX, FiPlus, FiTrash2 } from 'react-icons/fi';
+import GolfScoreSection from "../components/GolfScoreSection";
+import { FiX } from 'react-icons/fi';
 
-const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
+const MemberEditDrawer = ({ memberData, onClose, onSubmit}) => {
   const getInitialData = (data) => ({
     id: data?.id || '',
     name: data?.name || '',
     handicap: data?.handicap ?? '',
     score: {
-      total: data?.score?.total ?? '',
+      total: data?.score?.total ?? 0,
       holes: data?.score?.holes || [],
     },
     reason: data?.reason ?? '',
@@ -22,11 +23,12 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
     }
   }, [memberData]);
 
+  // 새로운 홀을 추가할 때 기본값이 포함된 객체 생성
   const addHole = () => {
     const newHole = {
       holeNumber: newMemberData.score.holes.length + 1,
-      strokes: '',
-      par: '',
+      strokes: 0,
+      par: 0,
       scoreType: 'normal',
       notes: ''
     };
@@ -61,9 +63,35 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
     }));
   };
 
-  const handleSubmit = () => {  
+  const handleHolesChange = (holes) => {
+    setNewMemberData(prev => ({
+      ...prev,
+      score: {
+        ...prev.score,
+        holes: [...holes]
+      }
+    }));
+  };
+
+  useEffect(() => {
+    const computedTotal = newMemberData.score.holes.reduce((total, hole) => {
+      return total + (hole.strokes - hole.par);
+    }, 0);
+  
+    if (computedTotal !== newMemberData.score.total) {
+      setNewMemberData(prev => ({
+        ...prev,
+        score: {
+          ...prev.score,
+          total: computedTotal
+        }
+      }));
+    }
+  }, [newMemberData.score.holes]);
+
+  const handleSubmit = () => {
     onSubmit(newMemberData);
-  }
+  };
 
   return (
     <div className="h-full flex flex-col bg-white">
@@ -132,107 +160,26 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit }) => {
           {/* 점수 관리 섹션 */}
           <div className="pt-4">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-medium text-gray-900">점수 관리</h4>
+              <h4 className="text-lg font-medium text-gray-900">점수 현황</h4>
               <div className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
                 총 {newMemberData.score.holes.length}홀
               </div>
             </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">총 점수</label>
-              <input
-                type="number"
-                value={newMemberData.score.total}
-                onChange={(e) => setNewMemberData({
-                  ...newMemberData,
-                  score: { ...newMemberData.score, total: Number(e.target.value) }
-                })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="총 점수를 입력하세요"
-              />
+            <div className="mb-6 flex items-center">
+              <label className="block text-sm font-medium text-gray-700 mr-4">총 점수:</label>
+              <div className="text-sm font-medium text-gray-900">{newMemberData.score.total}</div>
             </div>
 
             {/* 홀별 점수 섹션 */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h5 className="text-sm font-medium text-gray-700">홀별 점수</h5>
-                <button
-                  type="button"
-                  onClick={addHole}
-                  className="inline-flex items-center px-3 py-1.5 text-sm text-blue-600 hover:text-blue-700 transition-colors"
-                >
-                  <FiPlus className="w-4 h-4 mr-1" />
-                  홀 추가
-                </button>
-              </div>
+            <GolfScoreSection 
+              holes={newMemberData?.score?.holes} 
+              addHole={addHole} 
+              removeHole={removeHole} 
+              updateHoleField={updateHoleField}
+              onHolesChange={handleHolesChange} 
+            />
 
-              <div className="space-y-4">
-                {newMemberData.score.holes.map((hole, index) => (
-                  <div key={index} className="p-4 bg-gray-50 rounded-lg border">
-                    <div className="flex justify-between items-center mb-3">
-                      <div className="flex items-center">
-                        <span className="font-medium text-gray-900">홀 {hole.holeNumber}</span>
-                        {hole.scoreType !== 'normal' && (
-                          <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">
-                            {hole.scoreType}
-                          </span>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeHole(index)}
-                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                      >
-                        <FiTrash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">타수</label>
-                        <input
-                          type="number"
-                          value={hole.strokes}
-                          onChange={(e) => updateHoleField(index, 'strokes', Number(e.target.value))}
-                          className="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">파</label>
-                        <input
-                          type="number"
-                          value={hole.par}
-                          onChange={(e) => updateHoleField(index, 'par', Number(e.target.value))}
-                          className="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">스코어 타입</label>
-                        <select
-                          value={hole.scoreType}
-                          onChange={(e) => updateHoleField(index, 'scoreType', e.target.value)}
-                          className="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        >
-                          <option value="normal">Normal</option>
-                          <option value="birdie">Birdie</option>
-                          <option value="eagle">Eagle</option>
-                          <option value="bogey">Bogey</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">노트</label>
-                        <input
-                          type="text"
-                          value={hole.notes}
-                          onChange={(e) => updateHoleField(index, 'notes', e.target.value)}
-                          className="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>
