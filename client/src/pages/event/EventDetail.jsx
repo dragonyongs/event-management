@@ -13,10 +13,8 @@ import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 
 const initialGroupForm = {
+    id: '',
     name: '',
-    capacity: '',
-    time: '',
-    description: '',
     teeTime: { start: '', estimatedDuration: '' },
     members: [],
 };
@@ -45,7 +43,11 @@ const EventDetail = () => {
             setSelectedGroupDatas(group);
             setGroupForm(group);
         } else {
-            setSelectedGroupDatas(null);
+            const newInitialGroupForm = {
+                ...initialGroupForm,
+                id: Date.now(),
+            }
+            setSelectedGroupDatas(newInitialGroupForm);
             setGroupForm(initialGroupForm);
         }
         setIsDrawerOpen(true);
@@ -54,60 +56,72 @@ const EventDetail = () => {
     // 새 그룹 데이터를 받아 해당 이벤트의 그룹 목록에 추가하는 함수
     const handleGroupSubmit = (newGroupData) => {
         let updatedEvent;
+    
         if (activeTab === 'golf') {
-            // 기존 그룹 목록에서 groupData.id와 일치하는 그룹이 있는지 확인합니다.
+            const groupId = newGroupData.id || `golf_group_${Date.now()}`; // ID가 없으면 새로 생성
+    
+            // 기존 그룹 목록에서 동일한 ID를 가진 그룹이 있는지 확인
             const groupExists = eventData.golfDetails.groups.some(
-                (group) => group.id === newGroupData.id
+                (group) => group.id === groupId
             );
     
             if (groupExists) {
-                // 존재한다면 해당 그룹을 업데이트합니다.
-                    const updatedGroups = eventData.golfDetails.groups.map((group) =>
-                    group.id === newGroupData.id ? newGroupData : group
+                // 기존 그룹을 업데이트
+                const updatedGroups = eventData.golfDetails.groups.map((group) =>
+                    group.id === groupId ? { ...newGroupData, id: groupId } : group
                 );
                 updatedEvent = {
                     ...eventData,
                     golfDetails: {
-                    ...eventData.golfDetails,
-                    groups: updatedGroups,
+                        ...eventData.golfDetails,
+                        groups: updatedGroups,
                     },
                 };
             } else {
-            // 존재하지 않는다면 새 그룹으로 추가합니다.
+                // 새 그룹을 추가
                 updatedEvent = {
                     ...eventData,
                     golfDetails: {
-                    ...eventData.golfDetails,
-                    groups: [...eventData.golfDetails.groups, newGroupData],
+                        ...eventData.golfDetails,
+                        groups: [
+                            ...eventData.golfDetails.groups,
+                            { ...newGroupData, id: groupId }, // 새로운 ID 추가
+                        ],
                     },
                 };
             }
         } else if (activeTab === 'tour') {
-            // 예시: bus 또는 destination 타입에 따라 업데이트
             if (drawerContent === 'bus') {
                 updatedEvent = {
                     ...eventData,
                     tourDetails: {
                         ...eventData.tourDetails,
-                        busGroups: [...(eventData.tourDetails.busGroups || []), newGroupData]
-                    }
+                        busGroups: [
+                            ...(eventData.tourDetails.busGroups || []),
+                            newGroupData,
+                        ],
+                    },
                 };
             } else if (drawerContent === 'destination') {
                 updatedEvent = {
                     ...eventData,
                     tourDetails: {
                         ...eventData.tourDetails,
-                        destinations: [...(eventData.tourDetails.destinations || []), newGroupData]
-                    }
+                        destinations: [
+                            ...(eventData.tourDetails.destinations || []),
+                            newGroupData,
+                        ],
+                    },
                 };
             }
         }
-        // 업데이트된 이벤트를 eventList에 반영
+    
+        // 이벤트 목록 업데이트
         const updatedEventList = eventList.map((event) =>
             event.id === id ? updatedEvent : event
         );
         setEventList(updatedEventList);
-        handleCloseDrawer(); // 닫으면서 상태 초기화
+        handleCloseDrawer(); // 드로어 닫기 및 상태 초기화
     };
 
     // 드로어 닫을 때 모든 관련 상태 초기화

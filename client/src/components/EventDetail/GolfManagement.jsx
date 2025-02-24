@@ -6,6 +6,7 @@ const GolfManagement = ({
   onAddGroup, 
   onEditGroup, 
   onDeleteGroup, 
+  onAddMember,
   onEditMember,
 }) => {
   const getStatusStyles = (status) => {
@@ -78,37 +79,48 @@ const GolfManagement = ({
               </div>
               
               <ul className="space-y-3">
-                {group.members.map((member) => (
-                  <li 
-                    key={member.id} 
-                    className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 cursor-pointer ${getStatusStyles(member.status)}`}
-                    onClick={() => onEditMember(group.id, member)}
-                  >
-                    <div className="flex items-center">
-                      <FiUser className={`mr-2 ${
-                        member.status === 'confirmed' ? 'text-green-600' :
-                        member.status === 'pending' ? 'text-yellow-600' : 'text-red-600'
-                      }`} />
-                      <div>
-                        <p className="font-medium text-gray-900">{member.name}</p>
-                        <p className={`text-sm ${
+                { group?.members.length === 0 ? 
+                  (
+                    <button
+                    type="button"
+                    onClick={onAddMember}
+                    className="w-full p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 text-gray-600"
+                    >
+                      <FiUser className="w-5 h-5" />
+                      <span>참가자 추가</span>
+                    </button>
+                  ) : group.members.map((member) => (
+                    <li 
+                      key={member.id} 
+                      className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 cursor-pointer ${getStatusStyles(member.status)}`}
+                      onClick={() => onEditMember(group.id, member)}
+                    >
+                      <div className="flex items-center">
+                        <FiUser className={`mr-2 ${
                           member.status === 'confirmed' ? 'text-green-600' :
                           member.status === 'pending' ? 'text-yellow-600' : 'text-red-600'
-                        }`}>
-                          {member.status === 'confirmed' 
-                            ? '참석 확정' 
-                            : member.status === 'pending' 
-                            ? '대기중' 
-                            : '불참' + (member.reason ? ' - ' + member.reason : '')
-                          }
-                        </p>
+                        }`} />
+                        <div>
+                          <p className="font-medium text-gray-900">{member.name}</p>
+                          <p className={`text-sm ${
+                            member.status === 'confirmed' ? 'text-green-600' :
+                            member.status === 'pending' ? 'text-yellow-600' : 'text-red-600'
+                          }`}>
+                            {member.status === 'confirmed' 
+                              ? '참석 확정' 
+                              : member.status === 'pending' 
+                              ? '대기중' 
+                              : '불참' + (member.reason ? ' - ' + member.reason : '')
+                            }
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <span className="text-sm font-medium text-gray-600">
-                      HC {member.handicap}
-                    </span>
-                  </li>
-                ))}
+                      <span className="text-sm font-medium text-gray-600">
+                        HC {member.handicap}
+                      </span>
+                    </li>
+                )) 
+              }
               </ul>
             </div>
           ))}
