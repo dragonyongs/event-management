@@ -7,7 +7,8 @@ export const useMemberManagement = (selectedEvent, setSelectedEvent, setEventLis
 
     const handleAddMember = (group) => {
         setSelectedGroupDatas(group);
-            const newMember = {
+
+        const newMember = {
             id: Date.now(),
             name: '',
             status: 'pending',
@@ -15,11 +16,15 @@ export const useMemberManagement = (selectedEvent, setSelectedEvent, setEventLis
             reason: '',
             score: { total: '', holes: [] },
         };
+        
         setMemberForm(newMember);
         setIsMemberEditOpen(true);
     };
 
     const handleEditMember = (group, member) => {
+        console.log("handleEditMember-group", group);
+        console.log("handleEditMember-member", member);
+
         setSelectedGroupDatas(group);
         setMemberForm(member);
         setIsMemberEditOpen(true);
@@ -27,8 +32,8 @@ export const useMemberManagement = (selectedEvent, setSelectedEvent, setEventLis
 
     const handleMemberSubmit = (updatedMember) => {
         if (!selectedGroupDatas?.id) {
-        console.error('groupForm ID가 없습니다.');
-        return;
+            console.error('groupForm ID가 없습니다.');
+            return;
         }
 
         setSelectedEvent((prev) => {

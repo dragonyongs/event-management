@@ -146,6 +146,7 @@ const Dashboard = () => {
         onClose={() => setIsDrawerOpen(false)}
         direction="right"
         size={480}
+        duration="300"
         className="overflow-hidden"
       >
         {selectedEvent && (

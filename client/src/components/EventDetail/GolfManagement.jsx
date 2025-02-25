@@ -1,7 +1,7 @@
 import React from 'react';
 import GroupItem from '../GroupItem';
 import MemberItem from '../MemberItem';
-import { FiPlus, FiClock, FiUser, FiEdit2, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiUser } from 'react-icons/fi';
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -58,8 +58,8 @@ const GolfManagement = ({
             onClick={onAddGroup} // 부모 콜백 호출
             className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
-            <FiPlus className="mr-2" />
-            조 추가하기
+                <FiPlus className="mr-2" />
+                조 추가하기
             </button>
         </div>
         {data.groups.length === 0 ? (
@@ -111,7 +111,7 @@ const GolfManagement = ({
                                 <MemberItem
                                     key={member.id}
                                     member={member}
-                                    groupId={group.id}
+                                    group={group}
                                     onDropMember={onDropMember}
                                     onEditMember={onEditMember}
                                     getStatusStyles={getStatusStyles}

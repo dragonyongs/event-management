@@ -1,18 +1,18 @@
 import { useDrag } from 'react-dnd';
 import { FiUser } from 'react-icons/fi';
 
-const MemberItem = ({ member, groupId, onDropMember, onEditMember, getStatusStyles }) => {
+const MemberItem = ({ member, group, onDropMember, onEditMember, getStatusStyles }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'member', // 드래그 타입
-        item: { memberId: member.id, fromGroupId: groupId }, // 드래그 시작 시 전달할 데이터
+        item: { memberId: member.id, fromGroupId: group?.id }, // 드래그 시작 시 전달할 데이터
         end: (item, monitor) => {
-        const dropResult = monitor.getDropResult();
-        if (dropResult) {
-            onDropMember(item.memberId, item.fromGroupId, dropResult.groupId);
-        }
+            const dropResult = monitor.getDropResult();
+            if (dropResult) {
+                onDropMember(item.memberId, item.fromGroupId, dropResult.groupId);
+            }
         },
         collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
+            isDragging: monitor.isDragging(),
         }),
     }));
 
@@ -20,7 +20,7 @@ const MemberItem = ({ member, groupId, onDropMember, onEditMember, getStatusStyl
         <li
         ref={drag}
         className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 cursor-pointer ${getStatusStyles(member.status, member.score)} ${isDragging ? 'opacity-50' : ''}`}
-        onClick={() => onEditMember(groupId, member)}
+        onClick={() => onEditMember(group, member)}
         >
         <div className="flex items-center">
             <FiUser

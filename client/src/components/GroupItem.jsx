@@ -6,7 +6,7 @@ const GroupItem = ({ group, onDropMember, onEditGroup, onDeleteGroup, onAddMembe
         accept: 'member', // 드롭 가능한 타입
         drop: () => ({ groupId: group.id }), // 드롭 시 전달할 데이터
         collect: (monitor) => ({
-        isOver: monitor.isOver(),
+            isOver: monitor.isOver(),
         }),
     }));
 

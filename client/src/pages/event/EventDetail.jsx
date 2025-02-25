@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { DndProvider } from 'react-dnd'; // DndProvider 임포트
-import { HTML5Backend } from 'react-dnd-html5-backend'; // HTML5Backend 임포트
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import EventHeader from '../../components/EventDetail/EventHeader';
 import EventTabs from '../../components/EventDetail/EventTabs';
 import EventDetailSummary from '../../components/EventDetail/EventDetailSummary';
@@ -15,14 +15,17 @@ import { sampleEventData } from '../../data/eventData';
 import { useEventDetail } from '../../hooks/useEventDetail';
 import { useGroupManagement } from '../../hooks/useGroupManagement';
 import { useMemberManagement } from '../../hooks/useMemberManagement';
+import EditEventDrawer from '../../components/EventDetail/EditEventDrawer';
 
 const EventDetail = () => {
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState('overview');
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isEventEditDrawer, setIsEventEditDrawer] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [eventList, setEventList] = useState(sampleEventData);
     const [selectedGroupDatas, setSelectedGroupDatas] = useState(null);
+    // const [selectedGroupId, setSelectedGroupId] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
     useEffect(() => {
@@ -56,6 +59,10 @@ const EventDetail = () => {
 
     const { onDropMember, handleDeleteGroup } = useEventDetail(selectedEvent, setSelectedEvent, eventList, setEventList);
 
+    const handleEditDawer = () => {
+        setIsEventEditDrawer(true);
+    }
+
     if (!selectedEvent) {
         return <div>이벤트를 찾을 수 없습니다.</div>;
     }
@@ -63,7 +70,7 @@ const EventDetail = () => {
     return (
         <DndProvider backend={HTML5Backend}> {/* DndProvider로 감싸기 */}
             <div className="min-h-screen bg-gray-50">
-                <EventHeader event={selectedEvent} />
+                <EventHeader event={selectedEvent} isOpen={handleEditDawer} />
                 <div className="container mx-auto px-4 py-6">
                     <EventTabs activeTab={activeTab} setActiveTab={setActiveTab} eventTypes={selectedEvent.type} />
                     <div className="mt-6">
@@ -88,9 +95,12 @@ const EventDetail = () => {
                         )}
                     </div>
                 </div>
+                <Drawer open={isEventEditDrawer} onClose={()=>setIsEventEditDrawer(false)} duration="300" direction="right" size={480} className="overflow-y-auto">
+                    <EditEventDrawer onClose={() => setIsEventEditDrawer(false)} />
+                </Drawer>
 
-                {isDrawerOpen && (
-                    <Drawer open={isDrawerOpen} onClose={handleCloseDrawer} direction="right" size={480} className="overflow-y-auto">
+                {/* {isDrawerOpen && ( */}
+                    <Drawer open={isDrawerOpen} onClose={handleCloseDrawer} duration="300" direction="right" size={480} className="overflow-y-auto">
                         <AddGroupDrawer
                             type={drawerContent}
                             groupForm={groupForm}
@@ -99,9 +109,9 @@ const EventDetail = () => {
                             onClose={handleCloseDrawer}
                         />
                     </Drawer>
-                )}
+                {/* )} */}
 
-                {isMemberEditOpen && (
+                {/* {isMemberEditOpen && ( */}
                     <Drawer
                         open={isMemberEditOpen}
                         onClose={() => {
@@ -110,6 +120,7 @@ const EventDetail = () => {
                         }}
                         direction="right"
                         size={480}
+                        duration="300"
                         className="overflow-y-auto"
                     >
                         <MemberEditDrawer
@@ -121,7 +132,7 @@ const EventDetail = () => {
                             onSubmit={(updatedMember) => handleMemberSubmit(updatedMember)}
                         />
                     </Drawer>
-                )}
+                {/* )} */}
             </div>
         </DndProvider>
     );
