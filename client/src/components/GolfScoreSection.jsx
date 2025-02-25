@@ -40,6 +40,12 @@ const GolfScoreSection = ({ holes, addHole, removeHole, updateHoleField, onHoles
             </div>
 
             <div className="space-y-4">
+                {holes.length === 0 &&
+                    <div className="p-4 border border-gray-100 rounded-xl bg-gray-50 text-center">
+                        <p className="text-gray-500">기록된 홀 점수가 없습니다.</p>
+                    </div>
+                }
+
                 {holes.map((hole, index) => (
                 <div
                     key={index}
