@@ -1,10 +1,5 @@
 import React from 'react';
-
-const eventTypeOptions = [
-  { id: 'tour', name: '관광', icon: '🏞️' },
-  { id: 'golf', name: '골프', icon: '⛳' },
-  { id: 'etc', name: '기타', icon: '🎉' },
-];
+import { eventTypeOptions } from '../data/eventData';
 
 const EventTypeSelector = ({ selectedTypes, onChange }) => {
   const toggleType = (typeId) => {

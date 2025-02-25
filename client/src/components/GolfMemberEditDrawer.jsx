@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GolfScoreSection from "../components/GolfScoreSection";
 import { FiX } from 'react-icons/fi';
 
-const MemberEditDrawer = ({ memberData, onClose, onSubmit}) => {
+const GolfMemberEditDrawer = ({ event, memberData, onClose, onSubmit}) => {
   const getInitialData = (data) => ({
     id: data?.id || '',
     name: data?.name || '',
@@ -97,7 +97,7 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit}) => {
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
       <div className="px-6 py-4 border-b flex justify-between items-center">
-        <h3 className="text-lg font-semibold">참가자 정보 관리</h3>
+        <h3 className="text-lg font-semibold">골프 참가자 정보 관리</h3>
         <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <FiX className="w-5 h-5" />
         </button>
@@ -116,6 +116,7 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit}) => {
                 onChange={(e) => setNewMemberData({ ...newMemberData, name: e.target.value })}
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+
             </div>
             
             <div>
@@ -198,4 +199,4 @@ const MemberEditDrawer = ({ memberData, onClose, onSubmit}) => {
   );
 };
 
-export default MemberEditDrawer;
+export default GolfMemberEditDrawer;

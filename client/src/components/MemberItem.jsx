@@ -4,7 +4,7 @@ import { FiUser } from 'react-icons/fi';
 const MemberItem = ({ member, group, onDropMember, onEditMember, getStatusStyles }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'member', // 드래그 타입
-        item: { memberId: member.id, fromGroupId: group?.id }, // 드래그 시작 시 전달할 데이터
+        item: { memberId: member.userId, fromGroupId: group?.id }, // 드래그 시작 시 전달할 데이터
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult();
             if (dropResult) {

@@ -35,44 +35,37 @@ export const useMemberManagement = (selectedEvent, setSelectedEvent, setEventLis
             console.error('groupForm ID가 없습니다.');
             return;
         }
-
+    
         setSelectedEvent((prev) => {
-        if (!prev) return prev;
-        const newGroups = prev.golfDetails.groups.map((group) => {
-            if (group.id === selectedGroupDatas.id) {
-            const updatedMembers = group.members?.some((member) => member.id === updatedMember.id)
-                ? group.members.map((member) => (member.id === updatedMember.id ? updatedMember : member))
-                : [...(group.members || []), updatedMember];
-            return { ...group, members: updatedMembers };
-            }
-            return group;
+            if (!prev) return prev;
+    
+            const golfSubEventIndex = prev.subEvents.findIndex((sub) => sub.type === 'golf');
+            if (golfSubEventIndex === -1) return prev;
+    
+            const golfSubEvent = prev.subEvents[golfSubEventIndex];
+            const newGroups = golfSubEvent.groups.map((group) => {
+                if (group.id === selectedGroupDatas.id) {
+                    const updatedMembers = group.members?.some((member) => member.id === updatedMember.id)
+                        ? group.members.map((member) => (member.id === updatedMember.id ? updatedMember : member))
+                        : [...(group.members || []), updatedMember];
+                    return { ...group, members: updatedMembers };
+                }
+                return group;
+            });
+    
+            const updatedSubEvents = [...prev.subEvents];
+            updatedSubEvents[golfSubEventIndex] = {
+                ...golfSubEvent,
+                groups: newGroups,
+            };
+    
+            const updatedEvent = { ...prev, subEvents: updatedSubEvents };
+            setEventList((prevList) => prevList.map((event) => (event.id === selectedEvent.id ? updatedEvent : event)));
+            return updatedEvent;
         });
-
-        const updatedEvent = {
-            ...prev,
-            golfDetails: { ...prev.golfDetails, groups: newGroups },
-        };
-        setEventList((prevList) => prevList.map((event) => (event.id === selectedEvent.id ? updatedEvent : event)));
-        return updatedEvent;
-        });
-
+    
         setMemberForm(null);
         setIsMemberEditOpen(false);
-
-        // API 호출 예시 (주석 처리)
-        // const saveMember = async (eventId, groupId, memberData) => {
-        //   try {
-        //     await axios.post(`/events/${eventId}/groups/${groupId}/members`, memberData);
-        //   } catch (error) {
-        //     console.error('멤버 저장 실패:', error);
-        //     throw error;
-        //   }
-        // };
-        // try {
-        //   await saveMember(selectedEvent.id, selectedGroupDatas.id, updatedMember);
-        // } catch (error) {
-        //   alert('멤버 저장에 실패했습니다.');
-        // }
     };
 
     return {

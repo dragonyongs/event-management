@@ -26,17 +26,19 @@ const StatusBadge = ({ status, dDay }) => {
 };
 
 const EventCard = ({ event }) => {
-  const { title, startDate, endDate, users, steps, status, thumbnail, type } =
+  const { title, startDate, endDate, users, steps, status } =
     event;
 
   const start = new Date(startDate);
   const end = new Date(endDate);
   const dDay = differenceInDays(end, new Date());
 
+  const thumbnail = event.images?.find((img) => img.type === 'thumbnail') || null;
   const defaultThumbnail =
-    type.length > 0
-      ? thumbnailOptions.find((option) => option.id === type[0])
-      : null;
+        event.type.length > 0
+            ? thumbnailOptions.find((option) => option.id === event.type[0])
+            : null;
+
   const [imageError, setImageError] = useState(false);
 
   const userCount = getCount(users);
@@ -55,9 +57,9 @@ const EventCard = ({ event }) => {
             />
           ) : (
             <div
-              className={`w-full h-full flex items-center justify-center text-3xl ${defaultThumbnail?.bgColor}`}
+              className={`w-full h-full flex items-center justify-center text-3xl ${defaultThumbnail?.bgColor || 'bg-gray-100'}`}
             >
-              {defaultThumbnail?.icon}
+              {defaultThumbnail?.icon || '📅'}
             </div>
           )}
         </div>

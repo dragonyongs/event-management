@@ -23,15 +23,14 @@ const SearchBar = ({ onSearch }) => {
           transition-all duration-200
         `}>
           <input
+            name="search"
             type="text"
             placeholder="이벤트 검색"
             value={query}
             onChange={handleSearch}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            className="w-full pl-12 pr-4 py-3.5 border-0
-                       placeholder:text-gray-400
-                       focus:outline-none focus:ring-0"
+            className="w-full pl-12 pr-4 py-3.5 border-0 placeholder:text-gray-400 focus:outline-none focus:ring-0"
           />
           <div className={`
             absolute left-4 top-1/2 -translate-y-1/2 
@@ -41,7 +40,7 @@ const SearchBar = ({ onSearch }) => {
             <LuSearch className="w-5 h-5" />
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   );
 };

@@ -1,4 +1,3 @@
-// /components/EventDetailSummary.jsx
 import React from 'react';
 import { 
     FaUsers, 
@@ -78,18 +77,18 @@ const EventDetailSummary = ({ event }) => {
             </div>
 
             {/* 이벤트 타입별 상세 정보 */}
-            {event.type?.includes('golf') && event.golfDetails && (
+            {event.subEvents?.find((sub) => sub.type === 'golf') && (
                 <div className="bg-white p-4 rounded-lg shadow">
                     <div className="flex items-center space-x-2 mb-3">
                         <RiGolfBallLine className="text-green-500" />
                         <h4 className="font-semibold text-gray-900">골프 정보</h4>
                     </div>
-                    <p className="text-sm text-gray-600">경기장: {event.golfDetails.venue || event.golfDetails.location}</p>
+                    <p className="text-sm text-gray-600">경기장: {event.subEvents.find((sub) => sub.type === 'golf').venue || event.subEvents.find((sub) => sub.type === 'golf').location}</p>
                     <p className="text-sm text-gray-600">
-                        총 그룹: {event.golfDetails.groups?.length || 0}팀
+                        총 그룹: {event.subEvents.find((sub) => sub.type === 'golf').groups?.length || 0}팀
                     </p>
                     <div className="mt-2 space-y-2">
-                        {event.golfDetails.groups && event.golfDetails.groups.map((group) => (
+                        {event.subEvents.find((sub) => sub.type === 'golf').groups?.map((group) => (
                             <div key={group.id} className="border p-2 rounded-lg">
                                 <h5 className="text-sm font-semibold">
                                     {group.name} - 티타임: {formatDateTime(group.teeTime.start)} (예상 시간: {group.teeTime.estimatedDuration})
@@ -103,20 +102,20 @@ const EventDetailSummary = ({ event }) => {
                 </div>
             )}
 
-            {event.type?.includes('tour') && event.tourDetails && (
+            {event.subEvents?.find((sub) => sub.type === 'tour') && (
                 <div className="bg-white p-4 rounded-lg shadow">
                     <div className="flex items-center space-x-2 mb-3">
                         <RiBusLine className="text-blue-500" />
                         <h4 className="font-semibold text-gray-900">관광 정보</h4>
                     </div>
                     <p className="text-sm text-gray-600">
-                        총 인원: {totalPassengers(event.tourDetails.busGroups)}명
+                        총 인원: {totalPassengers(event.subEvents.find((sub) => sub.type === 'tour').busGroups)}명
                     </p>
                     <p className="text-sm text-gray-600">
-                        운행 버스: {event.tourDetails.busGroups?.length || 0}대
+                        운행 버스: {event.subEvents.find((sub) => sub.type === 'tour').busGroups?.length || 0}대
                     </p>
                     <div className="mt-2 space-y-2">
-                        {event.tourDetails.destinations && event.tourDetails.destinations.map((dest) => (
+                        {event.subEvents.find((sub) => sub.type === 'tour').destinations?.map((dest) => (
                             <div key={dest.id} className="border p-2 rounded-lg">
                                 <h5 className="text-sm font-semibold">{dest.name}</h5>
                                 <p className="text-xs text-gray-500">

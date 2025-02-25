@@ -27,6 +27,7 @@ class ErrorBoundary extends React.Component {
 
 const GolfManagement = ({ 
     data,
+    users,
     onAddGroup, 
     onEditGroup, 
     onDeleteGroup, 
@@ -34,6 +35,8 @@ const GolfManagement = ({
     onEditMember,
     onDropMember,
 }) => {
+
+    const userMap = new Map(users.map(user => [user.id, user.name])); 
 
     const getStatusStyles = (status, score) => {
         if (status === 'confirmed') {
@@ -78,6 +81,10 @@ const GolfManagement = ({
                     >
                         <ul className="space-y-3">
                             {[...group.members]
+                                .map((member) => ({
+                                    ...member,
+                                    name: userMap.get(member.userId) || "알 수 없음",
+                                }))
                                 .sort((a, b) => {
 
                                 const getPriority = (member) => {
@@ -109,7 +116,7 @@ const GolfManagement = ({
                                 })
                                 .map((member) => (
                                 <MemberItem
-                                    key={member.id}
+                                    key={member.userId}
                                     member={member}
                                     group={group}
                                     onDropMember={onDropMember}
