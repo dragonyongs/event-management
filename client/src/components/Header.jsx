@@ -1,12 +1,14 @@
-import { LuPlus, LuUsers } from 'react-icons/lu';
+import { LuPlus, LuUsers, LuUserRoundCog } from 'react-icons/lu';
 import CreateEventDrawer from './CreateEventDrawer';
+import CreateUserDrawer from '../components/CreateUserDawer';
 
 const Title = ({
     isCreateDrawerOpen,
     setIsCreateDrawerOpen,
-    issUserCreateDrawerOpen,
-    setIsUserCreateDrawerOpen,
+    isCreateUserDrawerOpen,
+    setIsCreateUserDrawerOpen,
     handleCreateEvent,
+    handleCreateUser,
 }) => {
     return (
         <>
@@ -15,14 +17,24 @@ const Title = ({
                 <h1 className="text-2xl font-bold text-gray-900">Event Management</h1>
                 <div className="space-x-3">
                     <button
-                        onClick={() => setIsUserCreateDrawerOpen(true)}
+                        onClick={() => setIsCreateUserDrawerOpen(true)}
                         className="inline-flex items-center px-4 py-2.5 bg-white text-blue-600 rounded-lg border border-blue-500
                                     hover:text-blue-700 hover:bg-blue-50 active:bg-blue-300 
                                     shadow-sm hover:shadow-md transition-all duration-200
                                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
-                    <LuUsers className="w-5 h-5 mr-2" />
-                    사용자 등록
+                        <LuUsers className="w-5 h-5 mr-2" />
+                        사용자 등록
+                    </button>
+                    <button
+                        onClick={() => console.log("작업 예정")}
+                        className="inline-flex items-center px-4 py-2.5 bg-white text-blue-600 rounded-lg border border-blue-500
+                                    hover:text-blue-700 hover:bg-blue-50 active:bg-blue-300 
+                                    shadow-sm hover:shadow-md transition-all duration-200
+                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                        <LuUserRoundCog className="w-5 h-5 mr-2" />
+                        사용자 관리
                     </button>
                     <button
                         onClick={() => setIsCreateDrawerOpen(true)}
@@ -31,8 +43,8 @@ const Title = ({
                                     shadow-sm hover:shadow-md transition-all duration-200
                                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
-                    <LuPlus className="w-5 h-5 mr-2" />
-                    이벤트 생성
+                        <LuPlus className="w-5 h-5 mr-2" />
+                        이벤트 생성
                     </button>
                 </div>
                 
@@ -43,6 +55,12 @@ const Title = ({
                 isOpen={isCreateDrawerOpen}
                 onClose={() => setIsCreateDrawerOpen(false)}
                 handleCreateEvent={handleCreateEvent}
+            />
+
+            <CreateUserDrawer 
+                isOpen={isCreateUserDrawerOpen}
+                onClose={() => setIsCreateUserDrawerOpen(false)} 
+                onSubmit={handleCreateUser}
             />
         </>
     );

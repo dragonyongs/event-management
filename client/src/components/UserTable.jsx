@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiTrash2 } from 'react-icons/fi';
 
 const UserTable = ({
     users,
@@ -8,7 +8,8 @@ const UserTable = ({
     selectedUserIds,
     toggleSelectUser,
     toggleSelectAllOnPage,
-    handleUserInfo
+    handleUserInfo,
+    onDeleteUser
 }) => {
     return (
         <div className="overflow-x-auto border rounded-lg shadow-sm">
@@ -33,6 +34,7 @@ const UserTable = ({
                         <th className="p-4 font-medium">연락처</th>
                         <th className="p-4 font-medium">메모</th>
                         <th className="p-4 font-medium">배정</th>
+                        <th className="p-4 font-medium">삭제</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,8 +48,7 @@ const UserTable = ({
                         users.map(user => (
                             <tr
                                 key={user.id}
-                                className="border-b last:border-0 hover:bg-gray-50 transition-colors cursor-pointer"
-                                onClick={() => handleUserInfo(user)}
+                                className="border-b last:border-0 hover:bg-gray-50 transition-colors"
                             >
                                 <td className="p-4">
                                     <input
@@ -58,7 +59,7 @@ const UserTable = ({
                                         className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                                     />
                                 </td>
-                                <td className="p-4 whitespace-nowrap">{user.name}</td>
+                                <td className="p-4 whitespace-nowrap cursor-pointer" onClick={() => handleUserInfo(user)}>{user.name}</td>
                                 <td className="p-4 whitespace-nowrap">{user.company}</td>
                                 <td className="p-4 whitespace-nowrap">{user.team}</td>
                                 <td className="p-4 whitespace-nowrap">{user.position}</td>
@@ -99,6 +100,17 @@ const UserTable = ({
                                             );
                                         })
                                     )}
+                                </td>
+                                <td className="p-4 whitespace-nowrap">
+                                    <button
+                                        onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDeleteUser(user.id);
+                                        }}
+                                        className="text-red-600 hover:text-red-800 text-xs font-medium flex items-center"
+                                    >
+                                        <FiTrash2 className="mr-1" /> 삭제
+                                    </button>
                                 </td>
                             </tr>
                         ))

@@ -1,35 +1,45 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { newEventData, dummyUsers } from '../../data/eventData';
+import Drawer from 'react-modern-drawer';
+import 'react-modern-drawer/dist/index.css';
 import Header from '../../components/Header';
 import Tabs from '../../components/Tabs';
 import SearchBar from '../../components/SearchBar';
 import EventCard from '../../components/EventCard';
-import { newEventData, sampleEventData } from '../../data/eventData';
 import EventDetailDrawer from '../../components/EventDetail/EventDetailDrawer';
-import Drawer from 'react-modern-drawer';
-import 'react-modern-drawer/dist/index.css';
 import EditEventDrawer from '../../components/EditEventDrawer';
 import useDrawerSize from '../../utils/useDrawerSize';
 
 const Dashboard = () => {
+    // 이벤트 관련 상태
     const [events, setEvents] = useState(newEventData);
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [isScrolled, setIsScrolled] = useState(false);
     const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+    const [isEditEventDrawer, setIsEditEventDrawer] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [isEditEventDrawer, setIsEditEventDrawer] = useState(false);
+
+    // 사용자(더비유저) 관련 상태
+    const [users, setUsers] = useState(dummyUsers);
+    const [selectedUserForEdit, setSelectedUserForEdit] = useState(null);
+    const [isCreateUserDrawerOpen, setIsCreateUserDrawerOpen]= useState(false);
+    const [isEditUserDrawerOpen, setIsEditUserDrawerOpen] = useState(false);
 
     const drawerSize = useDrawerSize(); // 커스텀 훅 사용
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.body.style.overflow = isDrawerOpen || isCreateDrawerOpen || isEditEventDrawer ? 'hidden' : 'auto';
+        document.body.style.overflow =
+            isDrawerOpen || isCreateDrawerOpen || isEditEventDrawer || isCreateUserDrawerOpen
+            ? 'hidden'
+            : 'auto';
         return () => {
             document.body.style.overflow = 'auto';
         };
-    }, [isDrawerOpen, isCreateDrawerOpen, isEditEventDrawer]);
+    }, [isDrawerOpen, isCreateDrawerOpen, isEditEventDrawer, isCreateUserDrawerOpen ]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -94,7 +104,6 @@ const Dashboard = () => {
             setIsCreateDrawerOpen(false);
         };
 
-    // 수정된 이벤트 데이터를 업데이트
     const handleUpdateEvent = (updatedEvent) => {
         setEvents((prevEvents) =>
             prevEvents.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
@@ -103,7 +112,6 @@ const Dashboard = () => {
         setIsDrawerOpen(true);
     };
 
-    // 상세 드로어에서 수정 버튼 클릭 시 호출되는 함수
     const handleEditFromDetail = () => {
         console.log("handleEditFromDetail", selectedEvent);
 
@@ -111,72 +119,97 @@ const Dashboard = () => {
         setIsEditEventDrawer(true);
     };
 
+    // const handleCreateUser = () => {
+    //     console.log('생성 완료!');
+    // }
+
+    // const handleCreateUserSubmit = (newUser) => {
+    //     setUsers((prev) => [...prev, newUser]);
+    //     setIsCreateUserDrawerOpen(false);
+    // };
+
+    // const handleEditUser = (user) => {
+    //     setSelectedUserForEdit(user);
+    //     setIsEditUserDrawerOpen(true);
+    // };
+
+    // const handleUpdateUser = (updatedUser) => {
+    //     setUsers((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
+    //     setIsEditUserDrawerOpen(false);
+    // };
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-        <div
-            className={`sticky top-0 z-50 transition-all duration-300 ${
-            isScrolled
-                ? 'bg-white/80 backdrop-blur-lg shadow-sm'
-                : 'bg-transparent'
-            }`}
-        >
-            <Header
-            isCreateDrawerOpen={isCreateDrawerOpen}
-            setIsCreateDrawerOpen={setIsCreateDrawerOpen}
-            handleCreateEvent={handleCreateEvent}
-            />
-            <SearchBar onSearch={setSearchQuery} />
-            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
-
-        <main className="container mx-auto px-4 py-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {currentEvents.map((event) => (
-                <div
-                key={event.id}
-                onClick={() => handleEventClick(event)}
-                className="cursor-pointer"
-                >
-                <EventCard event={event} />
-                </div>
-            ))}
-            </div>
-            {currentEvents.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20">
-                <p className="text-gray-500 text-lg">검색 결과가 없습니다</p>
-                <p className="text-gray-400 text-sm mt-2">
-                다른 검색어로 시도해보세요
-                </p>
-            </div>
-            )}
-        </main>
-        {selectedEvent && (
-            <>
-                <Drawer
-                    open={isDrawerOpen}
-                    onClose={() => setIsDrawerOpen(false)}
-                    direction="right"
-                    size={drawerSize}
-                    duration="300"
-                    className="overflow-hidden"
-                >
-                    <EventDetailDrawer
-                        onEdit={handleEditFromDetail}
-                        event={selectedEvent}
-                        onClose={() => setIsDrawerOpen(false)}
-                        onViewFullScreen={handleViewFullScreen}
-                    />
-                </Drawer>
-
-                <EditEventDrawer
-                    key={selectedEvent.id} 
-                    isOpen={isEditEventDrawer}
-                    event={selectedEvent}
-                    onClose={() => setIsEditEventDrawer(false)}
-                    onUpdate={handleUpdateEvent}
+            <div
+                className={`sticky top-0 z-50 transition-all duration-300 ${
+                isScrolled
+                    ? 'bg-white/80 backdrop-blur-lg shadow-sm'
+                    : 'bg-transparent'
+                }`}
+            >
+                <Header
+                    isCreateDrawerOpen={isCreateDrawerOpen}
+                    isCreateUserDrawerOpen={isCreateUserDrawerOpen}
+                    setIsCreateDrawerOpen={setIsCreateDrawerOpen}
+                    setIsCreateUserDrawerOpen={setIsCreateUserDrawerOpen}
+                    isEditUserDrawerOpen={isEditUserDrawerOpen}
+                    setIsEditUserDrawerOpen={setIsEditUserDrawerOpen}
+                    // Drawer를 최상위로할지, 혹은 사용하는 컴포넌트에 상태 값을 전달로하는게 나은지...? 하위에 이동하면 인자가 늘어나긴하는데
+                    handleCreateEvent={handleCreateEvent}
+                    handleCreateUser={handleCreateUser}
                 />
-            </>
-        )}
+                <SearchBar onSearch={setSearchQuery} />
+                <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+            </div>
+
+            <main className="container mx-auto px-4 py-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {currentEvents.map((event) => (
+                    <div
+                    key={event.id}
+                    onClick={() => handleEventClick(event)}
+                    className="cursor-pointer"
+                    >
+                    <EventCard event={event} />
+                    </div>
+                ))}
+                </div>
+                {currentEvents.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-20">
+                    <p className="text-gray-500 text-lg">검색 결과가 없습니다</p>
+                    <p className="text-gray-400 text-sm mt-2">
+                    다른 검색어로 시도해보세요
+                    </p>
+                </div>
+                )}
+            </main>
+            {selectedEvent && (
+                <>
+                    <Drawer
+                        open={isDrawerOpen}
+                        onClose={() => setIsDrawerOpen(false)}
+                        direction="right"
+                        size={drawerSize}
+                        duration="300"
+                        className="overflow-hidden"
+                    >
+                        <EventDetailDrawer
+                            onEdit={handleEditFromDetail}
+                            event={selectedEvent}
+                            onClose={() => setIsDrawerOpen(false)}
+                            onViewFullScreen={handleViewFullScreen}
+                        />
+                    </Drawer>
+
+                    <EditEventDrawer
+                        key={selectedEvent.id} 
+                        isOpen={isEditEventDrawer}
+                        event={selectedEvent}
+                        onClose={() => setIsEditEventDrawer(false)}
+                        onUpdate={handleUpdateEvent}
+                    />
+                </>
+            )}
 
         </div>
     );

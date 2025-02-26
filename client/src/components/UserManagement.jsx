@@ -1,18 +1,18 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import SearchAndFilter from './SearchAndFilter';
 import UserTable from './UserTable';
 import Pagination from './Pagination';
+import { dummyUsers } from '../data/eventData';
 
 const UserManagement = ({
-    initialUsers,
+    users,
     assignmentCategories = [],
     onAssignUser,
+    onEditUser,
+    onDeleteUser,
     pageSize = 10,
 }) => {
-    // 초기 사용자 데이터에 assignments 필드(배열) 추가
-    const [users, setUsers] = useState(
-        initialUsers.map(user => ({ ...user, assignments: user.assignments || [] }))
-    );
+
     const [searchQuery, setSearchQuery] = useState('');
     const [filterDivision, setFilterDivision] = useState('ALL');
     const [currentPage, setCurrentPage] = useState(1);
@@ -26,12 +26,12 @@ const UserManagement = ({
             (user.company || '').toLowerCase().includes(lowerQuery) ||
             (user.position || '').toLowerCase().includes(lowerQuery) ||
             (user.role || '').toLowerCase().includes(lowerQuery)
-        );
+            );
         return filterDivision === 'ALL'
             ? searched
             : searched.filter(user => user.division === filterDivision);
     }, [users, searchQuery, filterDivision]);
-
+    
     // 페이지네이션
     const totalItems = filteredUsers.length;
     const totalPages = Math.ceil(totalItems / pageSize);
@@ -66,47 +66,36 @@ const UserManagement = ({
 
     // 개별 배정 (이미 배정된 경우 제거, 아니라면 배정) → 부모 onAssignUser 호출
     const handleAssignUser = (user, categoryKey) => {
-        const isAssigned = user.assignments && user.assignments.includes(categoryKey);
-        const newCategory = isAssigned ? null : categoryKey;
-        onAssignUser(user, newCategory);
-        setUsers(prevUsers =>
-            prevUsers.map(u =>
-                u.id === user.id ? { ...u, assignments: newCategory ? [newCategory] : [] } : u
-            )
-        );
+        onAssignUser(user, categoryKey);
     };
 
     // 통합 일괄 배정 (선택된 사용자가 있으면 해당 사용자, 없으면 필터 구분에 해당하는 사용자)
     const handleBulkAssignUnified = (categoryKey) => {
-        if (selectedUserIds.length > 0) {
-            const updatedUsers = users.map(user => {
-                if (selectedUserIds.includes(user.id)) {
-                    const isAssigned = user.assignments && user.assignments.includes(categoryKey);
-                    const newCategory = isAssigned ? null : categoryKey;
-                    onAssignUser(user, newCategory);
-                    return { ...user, assignments: newCategory ? [newCategory] : [] };
-                }
-                return user;
-            });
-            setUsers(updatedUsers);
-            setSelectedUserIds([]);
-        } else {
-        // } else if (filterDivision !== 'ALL') {
-            const updatedUsers = users.map(user => {
-                if (user.division === filterDivision) {
-                    const isAssigned = user.assignments && user.assignments.includes(categoryKey);
-                    const newCategory = isAssigned ? null : categoryKey;
-                    onAssignUser(user, newCategory);
-                    return { ...user, assignments: newCategory ? [newCategory] : [] };
-                }
-                return user;
-            });
-            setUsers(updatedUsers);
-        }
-    };
+        let targetUsers;
 
+        if (selectedUserIds.length > 0) {
+            targetUsers = users.filter(user => selectedUserIds.includes(user.id));
+        } else if (filterDivision !== 'ALL') {
+            targetUsers = users.filter(user => user.division === filterDivision);
+        } else {
+            return; // 적용 대상이 없으면 처리하지 않음
+        }
+
+        targetUsers.forEach(user => {
+        const isAssigned = user.assignments && user.assignments.includes(categoryKey);
+        onAssignUser(user, isAssigned ? null : categoryKey);
+        });
+        setSelectedUserIds([]);
+    };
+    
+    // bulk 삭제 기능 추가
+    const handleBulkDelete = () => {
+        selectedUserIds.forEach(id => onDeleteUser(id));
+        setSelectedUserIds([]);
+    };
+    
     const handleUserInfo = (user) => {
-        console.log('선택한 사용자 정보:', user);
+        onEditUser(user);
     }
 
     return (
@@ -118,6 +107,7 @@ const UserManagement = ({
                     setSearchQuery={setSearchQuery}
                     filterDivision={filterDivision}
                     setFilterDivision={setFilterDivision}
+                    
                 />
 
                 {/* 통합 배정 버튼 */}
@@ -160,6 +150,7 @@ const UserManagement = ({
                 toggleSelectUser={toggleSelectUser}
                 toggleSelectAllOnPage={toggleSelectAllOnPage}
                 handleUserInfo={handleUserInfo}
+                onDeleteUser={onDeleteUser}
             />
 
             {/* 페이지네이션 */}

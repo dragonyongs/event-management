@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.scrollbar-hidden {
+    @apply overflow-auto; /* 스크롤 기능 유지 */
+    -ms-overflow-style: none; /* Internet Explorer 및 Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}

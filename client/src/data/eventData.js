@@ -33,21 +33,9 @@ export const newEventData = [
       }
     ],
     type: ["golf", "tour"],
-    users: [
-      { id: "user_001", name: "김영희", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "cancelled" },
-      { id: "user_002", name: "이철수", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "confirmed" },
-      { id: "user_003", name: "박지성", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "confirmed" },
-      { id: "user_004", name: "최민수", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "confirmed" },
-      { id: "user_005", name: "홍길동", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "confirmed" },
-      { id: "user_006", name: "이순신", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "pending" },
-      { id: "user_007", name: "강감찬", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "pending" },
-      { id: "user_008", name: "유관순", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "pending" },
-      { id: "user_009", name: "김지훈", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "confirmed" },
-      { id: "user_010", name: "이정민", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "confirmed" },
-      { id: "user_011", name: "박수현", company: "", position: "", role: "participant", contact: "", inviter: "", notes: [], status: "confirmed" }
-    ],
+    users: ["user_001", "user_002", "user_003", "user_004"],
     staffs: [
-      { id: "staff_001", name: "최응금", company: "", position: "", role: "leader", contact: "", inviter: "", notes: [] }
+      // 이곳에 스태프를 별도 추가할 예정이었으나 유저의 속성에서 스태프 구분값으로 프론트에서 출력 예정으로 삭제 
     ],
     description: "제주도의 아름다운 자연과 함께하는 골프 & 관광 투어입니다.",
     schedule: [
