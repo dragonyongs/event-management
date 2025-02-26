@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import ThumbnailSelector from './ThumbnailSelector';
 import EventTypeSelector from './EventTypeSelector';
-import UserSelector from './UserSelector';
+// import UserSelector from './UserSelector';
 import StaffSelector from './StaffSelector';
 import { dummyStaffs, dummyUsers } from '../data/eventData';
+import EventUserSelector from './EventUserSelector';
 
 const EventForm = ({ initialData, onSubmit, onDelete }) => {
     const processDate = (dateStr) => (dateStr ? dateStr.slice(0, 10) : '');
@@ -17,6 +18,7 @@ const EventForm = ({ initialData, onSubmit, onDelete }) => {
     };
 
     const [eventData, setEventData] = useState(processedInitialData);
+    const [isUserSelectorOpen, setIsUserSelectorOpen] = useState(false);
     const [errors, setErrors] = useState({});
 
     const thumbnail = eventData.images?.find((img) => img.type === 'thumbnail') || null;
@@ -64,6 +66,11 @@ const EventForm = ({ initialData, onSubmit, onDelete }) => {
         if (validateEventData()) {
             onSubmit(eventData);
         }
+    };
+
+    const handleUserSelection = (selectedUsers) => {
+        handleChange('users', selectedUsers);
+        setIsUserSelectorOpen(false);
     };
 
     return (
@@ -186,7 +193,27 @@ const EventForm = ({ initialData, onSubmit, onDelete }) => {
                     />
                 </div>
 
-                <UserSelector
+                {/* 메인 이벤트의 참가자 선택 */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">참가자</label>
+                    <div className="flex items-center justify-between border rounded-lg p-2">
+                        <span>{eventData.users.length}명 선택됨</span>
+                        <button
+                            className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                            onClick={() => setIsUserSelectorOpen(true)}
+                        >
+                        참가자 추가
+                        </button>
+                    </div>
+                </div>
+
+                <StaffSelector
+                    availableUsers={dummyUsers}
+                    selectedStaffs={eventData.staffs}
+                    onChange={(staffs) => handleChange('staffs', staffs)}
+                />
+
+                {/* <UserSelector
                     availableUsers={dummyUsers}  // 전체 유저 풀
                     selectedUsers={eventData.users || []}  // 선택된 유저
                     onChange={(users) => handleChange('users', users)}
@@ -196,7 +223,8 @@ const EventForm = ({ initialData, onSubmit, onDelete }) => {
                     availableUsers={dummyStaffs}  // 전체 스태프 풀
                     selectedStaffs={eventData.staffs}
                     onChange={(staffs) => handleChange('staffs', staffs)}
-                />
+                /> */}
+
             </div>
             <div className="flex justify-between gap-x-3 px-6">
                 <button 
@@ -212,6 +240,15 @@ const EventForm = ({ initialData, onSubmit, onDelete }) => {
                     저장
                 </button>
             </div>
+            {/* 메인 이벤트 참가자 선택 모달 */}
+                {isUserSelectorOpen && (
+                    <EventUserSelector 
+                        availableUsers={dummyUsers}
+                        selectedUsers={eventData.users}
+                        onConfirm={handleUserSelection}
+                        onClose={() => setIsUserSelectorOpen(false)}
+                    />
+                )}
         </>
     );
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Title from '../../components/Title';
+import Header from '../../components/Header';
 import Tabs from '../../components/Tabs';
 import SearchBar from '../../components/SearchBar';
 import EventCard from '../../components/EventCard';
@@ -9,6 +9,7 @@ import EventDetailDrawer from '../../components/EventDetail/EventDetailDrawer';
 import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 import EditEventDrawer from '../../components/EditEventDrawer';
+import useDrawerSize from '../../utils/useDrawerSize';
 
 const Dashboard = () => {
     const [events, setEvents] = useState(newEventData);
@@ -20,6 +21,7 @@ const Dashboard = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isEditEventDrawer, setIsEditEventDrawer] = useState(false);
 
+    const drawerSize = useDrawerSize(); // 커스텀 훅 사용
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,7 +33,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-        setIsScrolled(window.scrollY > 10);
+            setIsScrolled(window.scrollY > 10);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
@@ -118,7 +120,7 @@ const Dashboard = () => {
                 : 'bg-transparent'
             }`}
         >
-            <Title
+            <Header
             isCreateDrawerOpen={isCreateDrawerOpen}
             setIsCreateDrawerOpen={setIsCreateDrawerOpen}
             handleCreateEvent={handleCreateEvent}
@@ -154,7 +156,7 @@ const Dashboard = () => {
                     open={isDrawerOpen}
                     onClose={() => setIsDrawerOpen(false)}
                     direction="right"
-                    size={480}
+                    size={drawerSize}
                     duration="300"
                     className="overflow-hidden"
                 >

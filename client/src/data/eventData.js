@@ -779,12 +779,132 @@ export const thumbnailOptions = [
 ];
 
 export const dummyUsers = [
-  { id: 'user_001', name: '홍길동' },
-  { id: 'user_002', name: '김철수' },
-  { id: 'user_003', name: '박영수' },
-  { id: 'user_004', name: '이민정' },
-  { id: 'user_005', name: '최지훈' },
+  {
+    id: 'user_001',
+    name: '홍길동',
+    role: '조인웍, 팀교육',
+    position: '영업상무',
+    rank: '상무',
+    email: 'hong@example.com',
+    phone: '010-1111-2222',
+    companyContact: '02-1234-5678',
+    company: '회사A',
+    department: '',
+    team: '팀A-1',
+    division: '컨설턴트', // FA: 회사업무 컨설팅 담당
+    memo: 'A회사 컨설턴트, 본부 소속'
+  },
+  {
+    id: 'user_002',
+    name: '김철수',
+    role: '행사 총책임', // 인원체크
+    position: '팀장', // 직위: 팀장, 파트장
+    rank: '차장', // 직급: 차장, 과장 대리...
+    email: 'kim@example.com',
+    phone: '010-3333-4444',
+    companyContact: '02-2222-3333',
+    company: '회사A',
+    department: '영엽지원본부',
+    team: '팀A-2',
+    division: '스태프', // 일반 직원
+    memo: 'A회사 일반 직원'
+  },
+  {
+    id: 'user_003',
+    name: '박영수',
+    role: '기업 미팅',
+    position: '대표이사',
+    rank: '대표',
+    email: 'park@example.com',
+    phone: '010-5555-6666',
+    companyContact: '031-123-4567',
+    company: '회사B',
+    department: '',
+    team: '팀B-1',
+    division: '대표', // 기업 대표
+    memo: '회사B 대표'
+  },
+  {
+    id: 'user_004',
+    name: '이민정',
+    role: 'MOU 담당, 인사권자',
+    position: '본부장',
+    rank: '상무',
+    email: 'lee@example.com',
+    phone: '010-7777-8888',
+    companyContact: '031-456-7890',
+    company: '회사B',
+    team: '팀B-2',
+    division: '임원', // 상무, 전무 등 임원급
+    memo: '회사B 임원, 해외 출장 경험 풍부'
+  },
+  {
+    id: 'user_005',
+    name: '최지훈',
+    role: '이벤트 행사 진행 보조',
+    position: '파트장',
+    rank: '과장',
+    email: 'choi@example.com',
+    phone: '010-9999-0000',
+    companyContact: '02-3333-4444',
+    company: '외부업체',
+    team: '외부', // 외부인력인 경우 소속팀 대신 외부라고 표기
+    department: '',
+    division: '업체', // 외부 협력 업체
+    memo: '외부 협력 업체 담당자'
+  },
+  {
+    id: 'user_006',
+    name: '박정현',
+    role: '',
+    position: '',
+    rank: '',
+    email: 'parks@example.com',
+    phone: '010-1111-0000',
+    companyContact: '02-2222-4444',
+    company: '',
+    department: '경영지원본부',
+    team: '',
+    division: '',
+    memo: ''
+  },
+  {
+    id: 'user_007',
+    name: '이미숙',
+    role: '',
+    position: '',
+    rank: '',
+    email: 'parks@example.com',
+    phone: '010-1111-0000',
+    companyContact: '02-2222-4444',
+    company: '',
+    department: '경영지원본부',
+    team: '',
+    division: '',
+    memo: ''
+  },
+  {
+    id: 'user_008',
+    name: '고기현',
+    role: '',
+    position: '',
+    rank: '',
+    email: 'parks@example.com',
+    phone: '010-1111-0000',
+    companyContact: '02-2222-4444',
+    company: '',
+    department: '경영지원본부',
+    team: '',
+    division: '',
+    memo: ''
+  }
 ];
+
+// 구분의 보충 설명: A라는 회사에서 컨설팅을 회사업무로 진행하는데 일반 직원은 스태프, 컨설턴트는 FA로 부른다.
+// A라는 회사의 임직원 기업 대표와, 상무, 전무 등을 구분하는 것도 필요하고, 컨설턴트가 초대한 기업의 대표 또는 임직원의 구분도 필요하다.
+// 만약 행사에 외부 여행사나, 이벤트 관계자 등 외부인력의 경우 해당 인원 정보의 구분도 필요하다
+// 사용자의 필요항목으로는 이름, 이메일, 휴대폰, 회사연락처, 회사명, 소속팀, 구분(컨설턴트,스태프,대표,임원,업체), 메모 등 필요하고 관리에 필요한 다른 항목이 있으면 기입한다.
+// 사용자의 관리는 하나로 하지만 구분 값으로 그룹을 1차 나누고, 이벤트가 생성되면 그 메인 이벤트에 참여할 사용자 전원(스태프 포함)을 저장하고, 관광, 골프 또는 둘다에 속한 인원은 해당 메인 사용자를 중심으로 참여여부를 위해 사용자 아이디를 추가하여 체크한다. 그리고 그 하위 소그룹에서도 해당 상위 그룹의 인원을 기준으로 분배한다.
 
 export const dummyStaffs = [
   { id: 'user_001', name: '홍길동' },

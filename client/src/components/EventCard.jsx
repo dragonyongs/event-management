@@ -26,8 +26,7 @@ const StatusBadge = ({ status, dDay }) => {
 };
 
 const EventCard = ({ event }) => {
-  const { title, startDate, endDate, users, steps, status } =
-    event;
+  const { title, startDate, endDate, users, steps, status } = event;
 
   const start = new Date(startDate);
   const end = new Date(endDate);

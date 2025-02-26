@@ -5,6 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import EventHeader from '../../components/EventDetail/EventHeader';
 import EventTabs from '../../components/EventDetail/EventTabs';
 import EventDetailSummary from '../../components/EventDetail/EventDetailSummary';
+import UserManagement from '../../components/UserManagement';
 import GolfManagement from '../../components/EventDetail/GolfManagement';
 import TourManagement from '../../components/EventDetail/TourManagement';
 import AddGroupDrawer from '../../components/EventDetail/AddGroupDrawer';
@@ -12,10 +13,12 @@ import GolfMemberEditDrawer from '../../components/GolfMemberEditDrawer';
 import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 import { newEventData, sampleEventData } from '../../data/eventData';
+import { dummyUsers } from '../../data/eventData';
 import { useEventDetail } from '../../hooks/useEventDetail';
 import { useGroupManagement } from '../../hooks/useGroupManagement';
 import { useMemberManagement } from '../../hooks/useMemberManagement';
 import EditEventDrawer from '../../components/EditEventDrawer';
+import { FiUserCheck, FiUsers } from 'react-icons/fi';
 
 const EventDetail = () => {
     const { id } = useParams();
@@ -26,7 +29,10 @@ const EventDetail = () => {
     const [selectedGroupDatas, setSelectedGroupDatas] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isEditEventDrawer, setIsEditEventDrawer] = useState(false);
-    
+    const [assignments, setAssignments] = useState({});
+
+    // 전체 등록된 사용자 > 이벤트 생성 > 
+
     useEffect(() => {
         document.body.style.overflow = isEditEventDrawer ? 'hidden' : 'auto';
         return () => {
@@ -84,6 +90,34 @@ const EventDetail = () => {
         setIsEditEventDrawer(false);
     };
 
+    const assignmentCategories = [
+        {
+            key: 'staff',
+            label: '스태프',
+            style: 'bg-blue-500',
+            hoverStyle: 'hover:bg-blue-600',
+            icon: <FiUserCheck />,
+        },
+        {
+            key: 'golf',
+            label: '골프',
+            style: 'bg-green-500',
+            hoverStyle: 'hover:bg-green-600',
+            icon: <FiUsers />,
+        },
+        {
+            key: 'tour',
+            label: '관광 ',
+            style: 'bg-yellow-500',
+            hoverStyle: 'hover:bg-yellow-600',
+            icon: <FiUsers />,
+        },
+    ];
+
+    const onAssignUser = (user, categoryKey) => {
+        setAssignments(prev => ({ ...prev, [user.id]: categoryKey }));
+    };
+    
     if (!selectedEvent) {
         return <div>이벤트를 찾을 수 없습니다.</div>;
     }
@@ -96,6 +130,7 @@ const EventDetail = () => {
                     <EventTabs activeTab={activeTab} setActiveTab={setActiveTab} eventTypes={selectedEvent.type} />
                     <div className="mt-6">
                         {activeTab === 'overview' && <EventDetailSummary event={selectedEvent} />}
+                        {activeTab === 'user' && (<UserManagement initialUsers={dummyUsers} assignmentCategories={assignmentCategories} onAssignUser={onAssignUser} />)}
                         {activeTab === 'golf' && (
                             // <GolfManagement
                             //     data={selectedEvent.golfDetails}

@@ -37,8 +37,8 @@ const CreateEventDrawer = ({ isOpen, onClose, handleCreateEvent }) => {
 
     return (
         <Drawer open={isOpen} onClose={onClose} direction="right" size={480}>
-            <div className="p-6 space-y-6">
-                <h2 className="text-xl font-semibold">새 이벤트 생성</h2>
+            <div>
+                <h2 className="text-xl font-semibold pt-6 px-6">새 이벤트 생성</h2>
                 <EventForm initialData={initialData} onSubmit={handleSubmit} />
             </div>
         </Drawer>
