@@ -105,6 +105,12 @@ const EventDetail = () => {
     // userList에서 해당 유저 제거
     const handleDeleteUser = (userId) => {
         setUserList(prevUsers => prevUsers.filter(user => user.id !== userId));
+        setEventList(prevList => prevList.map(ev => {
+            if (ev.id === id) {
+                return { ...ev, users: ev.users.filter(u => u !== userId) };
+            }
+            return ev;
+        }));
     };
 
     // 수정된 이벤트 데이터를 업데이트

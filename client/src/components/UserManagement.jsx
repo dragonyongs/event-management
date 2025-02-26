@@ -110,37 +110,42 @@ const UserManagement = ({
                     
                 />
 
-                {/* 통합 배정 버튼 */}
-                {assignmentCategories.length > 0 && (
-                    <div className="flex flex-wrap gap-3">
-                        {assignmentCategories.map(cat => (
-                            <button
-                                key={cat.key}
-                                onClick={() => handleBulkAssignUnified(cat.key)}
-                                disabled={selectedUserIds.length === 0 && filterDivision === 'ALL'}
-                                className={`flex items-center px-4 py-2 rounded-md transition font-medium focus:outline-none ${
-                                    selectedUserIds.length === 0 && filterDivision === 'ALL'
-                                        ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                                        : `${cat.style} ${cat.hoverStyle} text-white`
-                                }`}
-                            >
-                                {cat.icon && <span className="mr-2">{cat.icon}</span>}
-                                {cat.label}{' '}
-                                {selectedUserIds.length > 0
-                                    ? ``
-                                    : filterDivision !== 'ALL'
-                                    ? '전체 적용'
-                                    : ''}
-                            </button>
-                        ))}
-                    </div>
-                )}
+            {/* 통합 배정 버튼 */}
+            {assignmentCategories.length > 0 && (
+                <div className="flex flex-wrap gap-3">
+                    {assignmentCategories.map(cat => (
+                        <button
+                            key={cat.key}
+                            onClick={() => handleBulkAssignUnified(cat.key)}
+                            disabled={selectedUserIds.length === 0 && filterDivision === 'ALL'}
+                            className={`flex items-center px-4 py-2 rounded-md transition font-medium focus:outline-none ${
+                                selectedUserIds.length === 0 && filterDivision === 'ALL'
+                                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                    : `${cat.style} ${cat.hoverStyle} text-white`
+                            }`}
+                        >
+                            {cat.icon && <span className="mr-2">{cat.icon}</span>}
+                            {cat.label}{' '}
+                            {selectedUserIds.length > 0
+                                ? ``
+                                : filterDivision !== 'ALL'
+                                ? '전체 적용'
+                                : ''}
+                        </button>
+                    ))}
+                </div>
+            )}
             </div>
             { selectedUserIds.length > 0 && (
+            <div className="flex justify-between">
                 <div className='flex items-center gap-x-4'>
                     {`${selectedUserIds.length}명 선택`}
                 </div>
-                )}
+                <div>
+                    <button onClick={handleBulkDelete} className={`flex items-center px-4 py-2 rounded-md transition font-medium focus:outline-none bg-red-500 text-white`} >선택 제외</button>
+                </div>
+            </div>
+            )}
             {/* 사용자 테이블 */}
             <UserTable
                 users={currentPageData}

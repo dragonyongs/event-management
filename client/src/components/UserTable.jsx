@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiCheck, FiTrash2 } from 'react-icons/fi';
+import { FiCheck, FiUserMinus } from 'react-icons/fi';
 
 const UserTable = ({
     users,
@@ -34,7 +34,7 @@ const UserTable = ({
                         <th className="p-4 font-medium">연락처</th>
                         <th className="p-4 font-medium">메모</th>
                         <th className="p-4 font-medium">배정</th>
-                        <th className="p-4 font-medium">삭제</th>
+                        <th className="p-4 font-medium">제외</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,7 +109,7 @@ const UserTable = ({
                                         }}
                                         className="text-red-600 hover:text-red-800 text-xs font-medium flex items-center"
                                     >
-                                        <FiTrash2 className="mr-1" /> 삭제
+                                        <FiUserMinus className="mr-1" /> 제외
                                     </button>
                                 </td>
                             </tr>
