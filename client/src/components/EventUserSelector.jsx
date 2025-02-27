@@ -7,7 +7,16 @@ const EventUserSelector = ({ availableUsers, selectedUsers, onConfirm, onClose }
 
     // selectedUsers가 변경될 때 tempSelected를 업데이트
     useEffect(() => {
-        setTempSelected(selectedUsers || []);
+        if (selectedUsers && selectedUsers.length > 0) {
+            // selectedUsers가 객체 배열일 경우, id만 추출하여 문자열 배열로 변환
+            if (typeof selectedUsers[0] === 'object') {
+                setTempSelected(selectedUsers.map(user => user.id));
+            } else {
+                setTempSelected(selectedUsers);
+            }
+        } else {
+            setTempSelected([]);
+        }
     }, [selectedUsers]);
 
     const toggleUser = (userId) => {
@@ -18,7 +27,6 @@ const EventUserSelector = ({ availableUsers, selectedUsers, onConfirm, onClose }
 
     const filteredUsers = useMemo(() => {
         if (!searchQuery.trim()) return availableUsers;
-        console.log(availableUsers)
         return availableUsers.filter((user) =>
             user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             user?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -28,9 +36,8 @@ const EventUserSelector = ({ availableUsers, selectedUsers, onConfirm, onClose }
     }, [searchQuery, availableUsers]);
 
     const handleConfirm = () => {
-        const selectedUserObjects = availableUsers.filter((user) =>
-            tempSelected.includes(user.id)
-        );
+        const selectedUserObjects = availableUsers.filter((user) => tempSelected.includes(user.id));
+        // tempSelected 그대로 사용하면 문자열 배열
         onConfirm(selectedUserObjects);
     };
 

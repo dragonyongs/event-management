@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ThumbnailSelector from './ThumbnailSelector';
 import EventTypeSelector from './EventTypeSelector';
-import StaffSelector from './StaffSelector';
+// import StaffSelector from './StaffSelector';
 import EventUserSelector from './EventUserSelector';
 
 const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
@@ -18,10 +18,6 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
         setEventData(processedInitialData);
         setErrors({});
     }, [initialData]);
-
-    // useEffect(() => {
-    //     setErrors({})
-    // }, [isOpen])
 
     const [eventData, setEventData] = useState(processedInitialData);
     const [isUserSelectorOpen, setIsUserSelectorOpen] = useState(false);
@@ -213,11 +209,11 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
                     </div>
                 </div>
 
-                <StaffSelector
+                {/* <StaffSelector
                     availableUsers={initialData.users}
                     selectedStaffs={eventData.staffs}
                     onChange={(staffs) => handleChange('staffs', staffs)}
-                />
+                /> */}
 
                 {/* <UserSelector
                     availableUsers={dummyUsers}  // 전체 유저 풀

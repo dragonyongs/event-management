@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
-import { thumbnailOptions } from '../../data/eventData';
+import React, { useState, useEffect } from 'react';
 import EventDetailSummary from './EventDetailSummary';
-import { getCount } from '../../utils/eventUtils';
+import { getCount, mapUserIdsToUserObjects } from '../../utils/eventUtils';
 import { useOutletContext } from 'react-router-dom';
+import { dummyUsers } from '../../data/eventData';
 
 import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 
 const EventDetailDrawer = ({ drawerSize, isOpen, onEdit, selectedEvent, onClose, onViewFullScreen }) => {
-    const { state, dispatch } = useOutletContext();
+    const { state } = useOutletContext();
+
     const currentEvent = state.events.find((event) => event.id === selectedEvent.id);
+    const users = mapUserIdsToUserObjects(currentEvent.users, dummyUsers);
+
     const thumbnail = currentEvent.images?.find((img) => img.type === 'thumbnail') || null;
     const [imageError, setImageError] = useState(false);
 
-    const userCount = getCount(state.users);
-    const stepsCount = getCount(state.staffs);
+    const findStaffs = users.filter(user => user.division === "스태프");
+    const eventUserCount = getCount(currentEvent.users);
+    const eventStaffCount = getCount(findStaffs);
 
     return (
         <Drawer open={isOpen} onClose={onClose} direction="right" size={drawerSize} className="overflow-y-auto">
@@ -76,7 +80,7 @@ const EventDetailDrawer = ({ drawerSize, isOpen, onEdit, selectedEvent, onClose,
                             : '예정됨'}
                         </span>
                         <span className="text-sm text-gray-500">
-                            참가자 {userCount}명 · 스텝 {stepsCount}명
+                            참가자 {eventUserCount}명 · 스텝 {eventStaffCount}명
                         </span>
                         </div>
 

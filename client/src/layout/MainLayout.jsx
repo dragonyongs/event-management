@@ -61,6 +61,7 @@ function reducer(state, action) {
                 events: state.events.map((ev) =>
                     ev.id === action.event.id ? action.event : ev
                 ),
+                selectedEvent: state.selectedEvent?.id === action.event.id ? action.event : state.selectedEvent,
                 drawers: { ...state.drawers, isEditEventDrawer: false },
             };
         case 'UPDATE_USER':

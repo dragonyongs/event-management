@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { format, differenceInDays } from 'date-fns';
-import { thumbnailOptions } from '../data/eventData';
-import { getCount } from '../utils/eventUtils';
+// import { thumbnailOptions } from '../data/eventData';
+import { getCount, mapUserIdsToUserObjects } from '../utils/eventUtils';
 import { useOutletContext } from 'react-router-dom';
+import { dummyUsers } from '../data/eventData';
 
 const StatusBadge = ({ status, dDay }) => {
   const statusStyles = {
@@ -27,9 +28,9 @@ const StatusBadge = ({ status, dDay }) => {
 };
 
 const EventCard = ({ event }) => {
-  const { state, dispatch } = useOutletContext();
+  const { state } = useOutletContext();
 
-  const { title, startDate, endDate, users, steps, status } = event;
+  const { title, startDate, endDate, users, status } = event;
 
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -39,8 +40,10 @@ const EventCard = ({ event }) => {
   const thumbnail = currentEvent.images?.find((img) => img.type === 'thumbnail') || null;
   const [imageError, setImageError] = useState(false);
 
-  const userCount = getCount(users);
-  const stepsCount = getCount(steps);
+  const eventUsers = mapUserIdsToUserObjects(users, dummyUsers);
+  const findStaffs = eventUsers.filter(user => user.division === "스태프");
+  const eventUserCount = getCount(users);
+  const eventStaffCount = getCount(findStaffs);
 
   return (
     <div className="group relative bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -79,11 +82,11 @@ const EventCard = ({ event }) => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center text-gray-600">
               <span className="inline-block w-5 h-5 mr-1.5">👥</span>
-              <span className="text-sm">{userCount.toLocaleString()}명</span>
+              <span className="text-sm">{eventUserCount.toLocaleString()}명</span>
             </div>
             <div className="flex items-center text-gray-600">
               <span className="inline-block w-5 h-5 mr-1.5">👤</span>
-              <span className="text-sm">스텝 {stepsCount}명</span>
+              <span className="text-sm">스텝 {eventStaffCount}명</span>
             </div>
           </div>
         </div>

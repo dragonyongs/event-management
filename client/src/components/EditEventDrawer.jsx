@@ -11,6 +11,23 @@ const EditEventDrawer = ({ drawerSize, event, searchUsers, isOpen, onClose, onUp
         onClose();
     };
 
+    // 배열로 초기 전달을 원할 경우
+    // const handleSubmit = (eventData) => {
+    //     // eventData.users가 객체 배열이라면, id만 추출합니다.
+    //     let updatedUsers = eventData.users;
+    //     if (Array.isArray(updatedUsers) && updatedUsers.length > 0 && typeof updatedUsers[0] === 'object') {
+    //         updatedUsers = updatedUsers.map(user => user.id);
+    //     }
+    //     const updatedEvent = { 
+    //         ...event, 
+    //         ...eventData,
+    //         users: updatedUsers 
+    //     };
+    //     onUpdate(updatedEvent);
+    //     console.log("EditEventDrawer", eventData);
+    //     onClose();
+    // };
+
     return (
         <Drawer open={isOpen} onClose={onClose} direction="right" size={drawerSize} className="overflow-y-auto">
             <div className="h-full flex flex-col bg-white">
