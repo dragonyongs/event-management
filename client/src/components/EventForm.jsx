@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ThumbnailSelector from './ThumbnailSelector';
 import EventTypeSelector from './EventTypeSelector';
-// import UserSelector from './UserSelector';
 import StaffSelector from './StaffSelector';
-import { dummyStaffs, dummyUsers } from '../data/eventData';
 import EventUserSelector from './EventUserSelector';
 
-const EventForm = ({ initialData, onSubmit, onDelete }) => {
+const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
     const processDate = (dateStr) => (dateStr ? dateStr.slice(0, 10) : '');
-
     const processedInitialData = {
         ...initialData,
         startDate: processDate(initialData.startDate),
@@ -16,6 +13,15 @@ const EventForm = ({ initialData, onSubmit, onDelete }) => {
         users: initialData.users || [],  // 초기값이 없으면 빈 배열
         staffs: initialData.staffs || [],
     };
+
+    useEffect(() => {
+        setEventData(processedInitialData);
+        setErrors({});
+    }, [initialData]);
+
+    // useEffect(() => {
+    //     setErrors({})
+    // }, [isOpen])
 
     const [eventData, setEventData] = useState(processedInitialData);
     const [isUserSelectorOpen, setIsUserSelectorOpen] = useState(false);
@@ -208,7 +214,7 @@ const EventForm = ({ initialData, onSubmit, onDelete }) => {
                 </div>
 
                 <StaffSelector
-                    availableUsers={dummyUsers}
+                    availableUsers={initialData.users}
                     selectedStaffs={eventData.staffs}
                     onChange={(staffs) => handleChange('staffs', staffs)}
                 />
@@ -243,7 +249,7 @@ const EventForm = ({ initialData, onSubmit, onDelete }) => {
             {/* 메인 이벤트 참가자 선택 모달 */}
                 {isUserSelectorOpen && (
                     <EventUserSelector 
-                        availableUsers={dummyUsers}
+                        availableUsers={searchUsers}
                         selectedUsers={eventData.users}
                         onConfirm={handleUserSelection}
                         onClose={() => setIsUserSelectorOpen(false)}

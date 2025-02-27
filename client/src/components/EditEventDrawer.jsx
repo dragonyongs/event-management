@@ -3,7 +3,7 @@ import Drawer from 'react-modern-drawer';
 import EventForm from './EventForm';
 import { FiX } from 'react-icons/fi';
 
-const EditEventDrawer = ({ drawerSize, event, isOpen, onClose, onUpdate }) => {
+const EditEventDrawer = ({ drawerSize, event, searchUsers, isOpen, onClose, onUpdate }) => {
 
     const handleSubmit = (eventData) => {
         const updatedEvent = { ...event, ...eventData };
@@ -25,7 +25,7 @@ const EditEventDrawer = ({ drawerSize, event, isOpen, onClose, onUpdate }) => {
                     {/* Content */}
                 <div className="flex-1 overflow-y-auto">
                     <div className="space-y-6">
-                        <EventForm key={event.id} initialData={event} onSubmit={handleSubmit} />
+                        <EventForm key={event.id} searchUsers={searchUsers} initialData={event} onSubmit={handleSubmit} onDelete={() => console.log('Delete')} />
                     </div>
                 </div>
             </div>

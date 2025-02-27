@@ -777,7 +777,7 @@ export const dummyUsers = [
     phone: '010-1111-2222',
     companyContact: '02-1234-5678',
     company: '회사A',
-    department: '',
+    department: '경영지원본부',
     team: '팀A-1',
     division: '컨설턴트', // FA: 회사업무 컨설팅 담당
     memo: 'A회사 컨설턴트, 본부 소속'
@@ -807,7 +807,7 @@ export const dummyUsers = [
     phone: '010-5555-6666',
     companyContact: '031-123-4567',
     company: '회사B',
-    department: '',
+    department: '전략기획본부',
     team: '팀B-1',
     division: '대표', // 기업 대표
     memo: '회사B 대표'
@@ -822,6 +822,7 @@ export const dummyUsers = [
     phone: '010-7777-8888',
     companyContact: '031-456-7890',
     company: '회사B',
+    department: '전략기획본부',
     team: '팀B-2',
     division: '임원', // 상무, 전무 등 임원급
     memo: '회사B 임원, 해외 출장 경험 풍부'
@@ -837,7 +838,7 @@ export const dummyUsers = [
     companyContact: '02-3333-4444',
     company: '외부업체',
     team: '외부', // 외부인력인 경우 소속팀 대신 외부라고 표기
-    department: '',
+    department: '마케팅본부',
     division: '업체', // 외부 협력 업체
     memo: '외부 협력 업체 담당자'
   },

@@ -62,16 +62,16 @@ const EventDetailDrawer = ({ drawerSize, isOpen, onEdit, selectedEvent, onClose,
                     <div className="space-y-4">
                         <div>
                         <h3 className="text-xl font-semibold text-gray-900">
-                            {event.title}
+                            {state.selectedEvent.title}
                         </h3>
-                        <p className="text-sm text-gray-500 mt-1">{event.date}</p>
+                        <p className="text-sm text-gray-500 mt-1">{state.selectedEvent.date}</p>
                         </div>
 
                         <div className="flex items-center space-x-4">
                         <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">
-                            {event.status === 'ongoing'
+                            {state.selectedEvent.status === 'ongoing'
                             ? '진행 중'
-                            : event.status === 'completed'
+                            : state.selectedEvent.status === 'completed'
                             ? '완료됨'
                             : '예정됨'}
                         </span>
@@ -81,7 +81,7 @@ const EventDetailDrawer = ({ drawerSize, isOpen, onEdit, selectedEvent, onClose,
                         </div>
 
                         {/* 이벤트 유형별 정보 */}
-                        {event?.type && <EventDetailSummary event={event} />}
+                        {state.selectedEvent?.type && <EventDetailSummary event={state.selectedEvent} />}
                     </div>
                     </div>
                 </div>

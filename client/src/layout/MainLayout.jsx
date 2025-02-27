@@ -29,6 +29,10 @@ function reducer(state, action) {
                 ...state,
                 drawers: { ...state.drawers, [action.drawer]: false },
             };
+        case 'RESET_EVENT_FORM':
+            return {
+                ...state, eventForm: {} }
+            ;
         case 'SET_SELECTED_EVENT':
             return {
                 ...state,

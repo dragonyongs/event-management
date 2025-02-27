@@ -1,31 +1,35 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { GrClose, GrSearch, GrCheckmark } from "react-icons/gr";
-
 
 const EventUserSelector = ({ availableUsers, selectedUsers, onConfirm, onClose }) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [tempSelected, setTempSelected] = useState(selectedUsers || []);
+    const [tempSelected, setTempSelected] = useState([]);
+
+    // selectedUsers가 변경될 때 tempSelected를 업데이트
+    useEffect(() => {
+        setTempSelected(selectedUsers || []);
+    }, [selectedUsers]);
 
     const toggleUser = (userId) => {
-            setTempSelected((prev) =>
+        setTempSelected((prev) =>
             prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
         );
     };
 
     const filteredUsers = useMemo(() => {
         if (!searchQuery.trim()) return availableUsers;
+        console.log(availableUsers)
         return availableUsers.filter((user) =>
-            user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            user.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            user.team.toLowerCase().includes(searchQuery.toLowerCase())
+            user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user?.department?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user?.team?.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }, [searchQuery, availableUsers]);
 
     const handleConfirm = () => {
-        // 선택된 사용자 ID에 해당하는 사용자 객체들을 필터링하여 반환
         const selectedUserObjects = availableUsers.filter((user) =>
-        tempSelected.includes(user.id)
+            tempSelected.includes(user.id)
         );
         onConfirm(selectedUserObjects);
     };
@@ -54,24 +58,23 @@ const EventUserSelector = ({ availableUsers, selectedUsers, onConfirm, onClose }
                     </div>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4">
-                {filteredUsers.map((user) => (
-                    <div key={user.id} className="flex items-center p-2 hover:bg-gray-50 rounded-md">
-                        <button
-                            className={`w-5 h-5 rounded-md border mr-2 flex items-center justify-center transition-colors ${
-                            tempSelected.includes(user.id) ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-gray-300'
-                            }`}
-                            onClick={() => toggleUser(user.id)}
-                        >
-                            {tempSelected.includes(user.id) && <GrCheckmark size={14} />}
-                        </button>
-                        <div className="flex-1">
-                            <div>{user.name}</div>
-                            <div className="text-xs text-gray-500">
-                                {user.company} {user.department} {user.rank} {user.team}
+                    {filteredUsers.map((user) => (
+                        <div key={user.id} className="flex items-center p-2 hover:bg-gray-50 rounded-md cursor-pointer" onClick={() => toggleUser(user.id)}>
+                            <div
+                                className={`w-5 h-5 rounded-md border mr-2 flex items-center justify-center transition-colors ${
+                                    tempSelected.includes(user.id) ? 'bg-indigo-500 border-indigo-500 text-white' : 'border-gray-300'
+                                }`}
+                            >
+                                {tempSelected.includes(user.id) && <GrCheckmark size={14} />}
+                            </div>
+                            <div className="flex-1">
+                                <div>{user.name}</div>
+                                <div className="text-xs text-gray-500">
+                                    {user.company} {user.department} {user.rank} {user.team}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
                 </div>
                 <div className="p-4 border-t flex justify-end space-x-2 bg-gray-50">
                     <button onClick={onClose} className="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-100 transition-colors">

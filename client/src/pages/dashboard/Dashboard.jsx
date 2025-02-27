@@ -115,7 +115,11 @@ const Dashboard = () => {
                 key={selectedEvent.id} 
                 isOpen={drawers.isEditEventDrawer}
                 event={selectedEvent}
-                onClose={() => dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditEventDrawer' })}
+                searchUsers={state.users}
+                onClose={() => { 
+                    dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditEventDrawer' });
+                    dispatch({ type: 'RESET_EVENT_FORM' });
+                }}
                 onUpdate={handleUpdateEvent}
                 drawerSize={drawerSize}
             />

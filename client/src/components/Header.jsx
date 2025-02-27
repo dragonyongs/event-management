@@ -40,7 +40,11 @@ const Header = ({ state, dispatch }) => {
 
             <CreateEventDrawer
                 isOpen={state.drawers.isCreateEventDrawer}
-                onClose={() => dispatch({ type: 'CLOSE_DRAWER', drawer: 'isCreateEventDrawer' })}
+                searchUsers={state.users}
+                onClose={() => {
+                    dispatch({ type: 'CLOSE_DRAWER', drawer: 'isCreateEventDrawer' });
+                    dispatch({ type: 'RESET_EVENT_FORM' });
+                }}
                 handleCreateEvent={(newEventData) => {
                     const newEvent = {
                         id: `evt_${Date.now()}`,

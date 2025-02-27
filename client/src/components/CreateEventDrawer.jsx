@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Drawer from 'react-modern-drawer';
 import EventForm from './EventForm';
 
-const CreateEventDrawer = ({ isOpen, onClose, handleCreateEvent }) => {
+const CreateEventDrawer = ({ isOpen, onClose, searchUsers, handleCreateEvent }) => {
+
     const initialData = {
         title: '',
         startDate: '',
@@ -39,7 +40,7 @@ const CreateEventDrawer = ({ isOpen, onClose, handleCreateEvent }) => {
         <Drawer open={isOpen} onClose={onClose} direction="right" size={480}>
             <div>
                 <h2 className="text-xl font-semibold pt-6 px-6">새 이벤트 생성</h2>
-                <EventForm initialData={initialData} onSubmit={handleSubmit} />
+                <EventForm initialData={initialData} searchUsers={searchUsers} onSubmit={handleSubmit} />
             </div>
         </Drawer>
     );
