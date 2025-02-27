@@ -7,7 +7,7 @@ const CreateUserDrawer = ({ isOpen, onClose, onSubmit }) => {
     const drawerSize = useDrawerSize();
 
     const [userData, setUserData] = useState({
-        id: '', // 실제 데이터에선 _id로 자동생성
+        id: `user_${Date.now()}`, // 실제 데이터에선 _id로 자동생성
         name: '',
         role: '',
         position: '',
@@ -42,7 +42,7 @@ const CreateUserDrawer = ({ isOpen, onClose, onSubmit }) => {
             return;
         }
 
-        const newUserData = { ...userData, id: new Date()};
+        const newUserData = { ...userData, id: `user_${Date.now()}`};
 
         onSubmit(newUserData);
         // 저장 후 폼 초기화 및 드로어 닫기

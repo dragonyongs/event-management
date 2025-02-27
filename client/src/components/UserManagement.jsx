@@ -2,14 +2,16 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import SearchAndFilter from './SearchAndFilter';
 import UserTable from './UserTable';
 import Pagination from './Pagination';
-import { dummyUsers } from '../data/eventData';
+import { LuUsers} from 'react-icons/lu';
 
 const UserManagement = ({
+    dispatch,
     users,
     assignmentCategories = [],
     onAssignUser,
     onEditUser,
     onDeleteUser,
+    enableAssignment = true,
     pageSize = 10,
 }) => {
 
@@ -111,7 +113,7 @@ const UserManagement = ({
                 />
 
             {/* 통합 배정 버튼 */}
-            {assignmentCategories.length > 0 && (
+            {enableAssignment && assignmentCategories.length > 0 && (
                 <div className="flex flex-wrap gap-3">
                     {assignmentCategories.map(cat => (
                         <button
@@ -135,8 +137,21 @@ const UserManagement = ({
                     ))}
                 </div>
             )}
+
+            {!enableAssignment && 
+                <button
+                    onClick={() => dispatch({ type: 'OPEN_DRAWER', drawer: 'isCreateUserDrawer' })}
+                    className="inline-flex items-center px-4 py-2.5 bg-white text-blue-600 rounded-lg border border-blue-500
+                                hover:text-blue-700 hover:bg-blue-50 active:bg-blue-300 
+                                shadow-sm hover:shadow-md transition-all duration-200
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                    <LuUsers className="w-5 h-5 mr-2" />
+                    사용자 등록
+                </button>
+            }
             </div>
-            { selectedUserIds.length > 0 && (
+            { selectedUserIds.length > 0 && enableAssignment && (
             <div className="flex justify-between">
                 <div className='flex items-center gap-x-4'>
                     {`${selectedUserIds.length}명 선택`}
@@ -156,6 +171,7 @@ const UserManagement = ({
                 toggleSelectAllOnPage={toggleSelectAllOnPage}
                 handleUserInfo={handleUserInfo}
                 onDeleteUser={onDeleteUser}
+                enableAssignment={enableAssignment}
             />
 
             {/* 페이지네이션 */}

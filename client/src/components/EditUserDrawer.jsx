@@ -3,7 +3,7 @@ import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 
 const EditUserDrawer = ({ isOpen, onClose, initialUser, onSubmit, size}) => {
-    const [userData, setUserData] = useState(initialUser || {
+    const defaultUser = {
         id: '',
         name: '',
         role: '',
@@ -17,15 +17,15 @@ const EditUserDrawer = ({ isOpen, onClose, initialUser, onSubmit, size}) => {
         team: '',
         division: '',
         memo: '',
-    });
+    };
+
+    const [userData, setUserData] = useState(initialUser || defaultUser);
 
     const [errors, setErrors] = useState({});
 
   // initialUser가 변경되면 로컬 state 업데이트
     useEffect(() => {
-        if (initialUser) {
-            setUserData(initialUser);
-        }
+            setUserData(initialUser || defaultUser);
     }, [initialUser]);
 
     const handleChange = (field, value) => {
@@ -46,10 +46,9 @@ const EditUserDrawer = ({ isOpen, onClose, initialUser, onSubmit, size}) => {
             return;
         }
 
-        // const editUserData = { ...userData, id: initialUser?.id};
-
         onSubmit(userData);
         onClose();
+        setUserData(defaultUser); // 폼 초기화
     };
 
     return (

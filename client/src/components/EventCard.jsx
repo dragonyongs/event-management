@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { thumbnailOptions } from '../data/eventData';
 import { getCount } from '../utils/eventUtils';
+import { useOutletContext } from 'react-router-dom';
 
 const StatusBadge = ({ status, dDay }) => {
   const statusStyles = {
@@ -26,18 +27,16 @@ const StatusBadge = ({ status, dDay }) => {
 };
 
 const EventCard = ({ event }) => {
+  const { state, dispatch } = useOutletContext();
+
   const { title, startDate, endDate, users, steps, status } = event;
 
   const start = new Date(startDate);
   const end = new Date(endDate);
   const dDay = differenceInDays(end, new Date());
 
-  const thumbnail = event.images?.find((img) => img.type === 'thumbnail') || null;
-  const defaultThumbnail =
-        event.type.length > 0
-            ? thumbnailOptions.find((option) => option.id === event.type[0])
-            : null;
-
+  const currentEvent = state.events.find((evt) => evt.id === event.id);
+  const thumbnail = currentEvent.images?.find((img) => img.type === 'thumbnail') || null;
   const [imageError, setImageError] = useState(false);
 
   const userCount = getCount(users);
@@ -56,9 +55,9 @@ const EventCard = ({ event }) => {
             />
           ) : (
             <div
-              className={`w-full h-full flex items-center justify-center text-3xl ${defaultThumbnail?.bgColor || 'bg-gray-100'}`}
+              className={`w-full h-full flex items-center justify-center text-3xl ${thumbnail?.bgColor || 'bg-gray-100'}`}
             >
-              {defaultThumbnail?.icon || '📅'}
+              {thumbnail?.icon || '📅'}
             </div>
           )}
         </div>

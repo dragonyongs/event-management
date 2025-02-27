@@ -9,7 +9,8 @@ const UserTable = ({
     toggleSelectUser,
     toggleSelectAllOnPage,
     handleUserInfo,
-    onDeleteUser
+    onDeleteUser,
+    enableAssignment
 }) => {
     return (
         <div className="overflow-x-auto border rounded-lg shadow-sm">
@@ -33,8 +34,8 @@ const UserTable = ({
                         <th className="p-4 font-medium">구분</th>
                         <th className="p-4 font-medium">연락처</th>
                         <th className="p-4 font-medium">메모</th>
-                        <th className="p-4 font-medium">배정</th>
-                        <th className="p-4 font-medium">제외</th>
+                        {enableAssignment && <th className="p-4 font-medium">배정</th>}
+                        {enableAssignment && <th className="p-4 font-medium">제외</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -71,47 +72,51 @@ const UserTable = ({
                                     <span className="text-xs text-gray-400">{user.email}</span>
                                 </td>
                                 <td className="p-4 whitespace-nowrap">{user.memo}</td>
-                                <td className="p-4 whitespace-nowrap space-x-2">
-                                    {(!user.assignments || user.assignments.length === 0) ? (
-                                        // 배정이 없으면 모든 버튼을 보여줌
-                                        assignmentCategories.map(cat => (
-                                            <button
-                                                key={cat.key}
-                                                onClick={() => onAssignUser(user, cat.key)}
-                                                className={`px-3 py-1 text-xs font-medium text-white rounded-md ${cat.style} ${cat.hoverStyle} transition`}
-                                            >
-                                                {cat.label}
-                                            </button>
-                                        ))
-                                    ) : (
-                                        // 배정이 있으면 해당 배정 버튼만 보임 (토글: 다시 누르면 제거)
-                                        user.assignments.map(assignment => {
-                                            const category = assignmentCategories.find(cat => cat.key === assignment);
-                                            return (
+                                {enableAssignment && 
+                                    <td className="p-4 whitespace-nowrap space-x-2">
+                                        {(!user.assignments || user.assignments.length === 0) ? (
+                                            // 배정이 없으면 모든 버튼을 보여줌
+                                            assignmentCategories.map(cat => (
                                                 <button
-                                                    key={assignment}
-                                                    onClick={() => onAssignUser(user, assignment)}
-                                                    className={`inline-flex items-center px-3 py-1 text-xs font-medium text-white rounded-md ${
-                                                        category?.labelStyle || category.style
-                                                    } transition`}
+                                                    key={cat.key}
+                                                    onClick={() => onAssignUser(user, cat.key)}
+                                                    className={`px-3 py-1 text-xs font-medium text-white rounded-md ${cat.style} ${cat.hoverStyle} transition`}
                                                 >
-                                                    <FiCheck className="mr-1" /> {category.label}
+                                                    {cat.label}
                                                 </button>
-                                            );
-                                        })
-                                    )}
-                                </td>
-                                <td className="p-4 whitespace-nowrap">
-                                    <button
-                                        onClick={(e) => {
-                                        e.stopPropagation();
-                                        onDeleteUser(user.id);
-                                        }}
-                                        className="text-red-600 hover:text-red-800 text-xs font-medium flex items-center"
-                                    >
-                                        <FiUserMinus className="mr-1" /> 제외
-                                    </button>
-                                </td>
+                                            ))
+                                        ) : (
+                                            // 배정이 있으면 해당 배정 버튼만 보임 (토글: 다시 누르면 제거)
+                                            user.assignments.map(assignment => {
+                                                const category = assignmentCategories.find(cat => cat.key === assignment);
+                                                return (
+                                                    <button
+                                                        key={assignment}
+                                                        onClick={() => onAssignUser(user, assignment)}
+                                                        className={`inline-flex items-center px-3 py-1 text-xs font-medium text-white rounded-md ${
+                                                            category?.labelStyle || category.style
+                                                        } transition`}
+                                                    >
+                                                        <FiCheck className="mr-1" /> {category.label}
+                                                    </button>
+                                                );
+                                            })
+                                        )}
+                                    </td>
+                                }   
+                                {enableAssignment && 
+                                    <td className="p-4 whitespace-nowrap">
+                                        <button
+                                            onClick={(e) => {
+                                            e.stopPropagation();
+                                            onDeleteUser(user.id);
+                                            }}
+                                            className="text-red-600 hover:text-red-800 text-xs font-medium flex items-center"
+                                        >
+                                            <FiUserMinus className="mr-1" /> 제외
+                                        </button>
+                                    </td>   
+                                }   
                             </tr>
                         ))
                     )}

@@ -3,7 +3,7 @@ import Drawer from 'react-modern-drawer';
 import EventForm from './EventForm';
 import { FiX } from 'react-icons/fi';
 
-const EditEventDrawer = ({ event, isOpen, onClose, onUpdate }) => {
+const EditEventDrawer = ({ drawerSize, event, isOpen, onClose, onUpdate }) => {
 
     const handleSubmit = (eventData) => {
         const updatedEvent = { ...event, ...eventData };
@@ -12,7 +12,7 @@ const EditEventDrawer = ({ event, isOpen, onClose, onUpdate }) => {
     };
 
     return (
-        <Drawer open={isOpen} onClose={onClose} direction="right" size={480} className="overflow-y-auto">
+        <Drawer open={isOpen} onClose={onClose} direction="right" size={drawerSize} className="overflow-y-auto">
             <div className="h-full flex flex-col bg-white">
                 {/* Header */}
                 <div className="px-6 py-4 border-b flex justify-between items-center">
