@@ -7,7 +7,7 @@ import { dummyUsers } from '../../data/eventData';
 import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 
-const EventDetailDrawer = ({ drawerSize, isOpen, onEdit, selectedEvent, onClose, onViewFullScreen }) => {
+const EventDetailDrawer = ({ size, isOpen, onEdit, selectedEvent, onClose, onViewFullScreen }) => {
     const { state } = useOutletContext();
 
     const currentEvent = state.events.find((event) => event.id === selectedEvent.id);
@@ -21,7 +21,7 @@ const EventDetailDrawer = ({ drawerSize, isOpen, onEdit, selectedEvent, onClose,
     const eventStaffCount = getCount(findStaffs);
 
     return (
-        <Drawer open={isOpen} onClose={onClose} direction="right" size={drawerSize} className="overflow-y-auto">
+        <Drawer open={isOpen} onClose={onClose} direction="right" size={size} className="overflow-y-auto">
             <div className="h-full flex flex-col bg-white">
                 <div className="p-4 border-b flex justify-between items-center">
                     <h2 className="text-lg font-semibold text-gray-900">이벤트 상세</h2>

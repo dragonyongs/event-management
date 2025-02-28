@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Tabs from '../../components/Tabs';
 import SearchBar from '../../components/SearchBar';
 import EventCard from '../../components/EventCard';
 import EventDetailDrawer from '../../components/EventDetail/EventDetailDrawer';
 import EditEventDrawer from '../../components/EditEventDrawer';
 import useDrawerSize from '../../utils/useDrawerSize';
+import { EventContext } from '../../context/EventContext';
 
 const Dashboard = () => {
-    const { state, dispatch } = useOutletContext();
+    const { state, dispatch } = useContext(EventContext);
     const { events, drawers, selectedEvent } = state;
     const navigate = useNavigate();
     const drawerSize = useDrawerSize();
@@ -108,7 +109,7 @@ const Dashboard = () => {
                 selectedEvent={selectedEvent}
                 onClose={() => dispatch({ type: 'CLOSE_DRAWER', drawer: 'isDrawerOpen' })}
                 onViewFullScreen={handleViewFullScreen}
-                drawerSize={drawerSize}
+                size={drawerSize}
             />
 
             <EditEventDrawer
@@ -121,7 +122,7 @@ const Dashboard = () => {
                     dispatch({ type: 'RESET_EVENT_FORM' });
                 }}
                 onUpdate={handleUpdateEvent}
-                drawerSize={drawerSize}
+                size={drawerSize}
             />
         </>
         )}

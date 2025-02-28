@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { EventContext } from '../context/EventContext';
 
 const initialGroupForm = {
     id: '',
@@ -7,56 +8,56 @@ const initialGroupForm = {
     members: [],
 };
 
-export const useGroupManagement = (
-    selectedEvent,
-    setSelectedEvent,
-    setSelectedGroupDatas,
-    setIsDrawerOpen,
-    setDrawerContent
-) => {
+export const useGroupManagement = () => {
+    const { state, dispatch } = useContext(EventContext);
     const [groupForm, setGroupForm] = useState(initialGroupForm);
 
-    const openAddGroupDrawer = (type, group) => {
-        setDrawerContent(type);
+    // 그룹 추가/수정 드로어 열기
+    const openAddGroupDrawer = (group = null) => {
+        dispatch({
+            type: 'OPEN_DRAWER',
+            drawer: 'isGroupDrawerOpen',
+        });
+
         if (group) {
-            setSelectedGroupDatas(group);
+            dispatch({
+                type: 'SET_SELECTED_GROUP',
+                selectedGroup: group,
+            });
             setGroupForm(group);
         } else {
-            const newInitialGroupForm = { ...initialGroupForm, id: Date.now() };
-            setSelectedGroupDatas(newInitialGroupForm);
-            setGroupForm(newInitialGroupForm);
+            const newGroup = { ...initialGroupForm, id: Date.now() };
+            dispatch({
+                type: 'SET_SELECTED_GROUP',
+                selectedGroup: newGroup,
+            });
+            setGroupForm(newGroup);
         }
-        setIsDrawerOpen(true);
     };
 
+    // 그룹 저장 (추가 또는 수정)
     const handleGroupSubmit = (newGroupData) => {
-        if (!selectedEvent) return;
-    
-        setSelectedEvent((prev) => {
-            const golfSubEventIndex = prev.subEvents.findIndex((sub) => sub.type === 'golf');
-            if (golfSubEventIndex === -1) return prev;
-    
-            const golfSubEvent = prev.subEvents[golfSubEventIndex];
-            const groupExists = golfSubEvent.groups.some((group) => group.id === newGroupData.id);
-            const updatedGroups = groupExists
-                ? golfSubEvent.groups.map((group) => (group.id === newGroupData.id ? newGroupData : group))
-                : [...golfSubEvent.groups, newGroupData];
-    
-            const updatedSubEvents = [...prev.subEvents];
-            updatedSubEvents[golfSubEventIndex] = {
-                ...golfSubEvent,
-                groups: updatedGroups,
-            };
-    
-            return { ...prev, subEvents: updatedSubEvents };
+        if (!state.selectedEvent) return;
+
+        dispatch({
+            type: 'UPDATE_GOLF_GROUP',
+            eventId: state.selectedEvent.id,
+            group: newGroupData,
         });
-    
+
         handleCloseDrawer();
     };
 
+    // 드로어 닫기
     const handleCloseDrawer = () => {
-        setIsDrawerOpen(false);
-        setSelectedGroupDatas(null);
+        dispatch({
+            type: 'CLOSE_DRAWER',
+            drawer: 'isGroupDrawerOpen',
+        });
+        dispatch({
+            type: 'SET_SELECTED_GROUP',
+            selectedGroup: null,
+        });
         setGroupForm(initialGroupForm);
     };
 

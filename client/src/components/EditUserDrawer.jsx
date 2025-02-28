@@ -45,7 +45,6 @@ const EditUserDrawer = ({ isOpen, onClose, initialUser, onSubmit, size}) => {
             setErrors(newErrors);
             return;
         }
-
         onSubmit(userData);
         onClose();
         setUserData(defaultUser); // 폼 초기화

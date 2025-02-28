@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ThumbnailSelector from './ThumbnailSelector';
 import EventTypeSelector from './EventTypeSelector';
-// import StaffSelector from './StaffSelector';
 import EventUserSelector from './EventUserSelector';
+import { EventContext } from '../context/EventContext';
 
 const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
+    const { state, dispatch } = useContext(EventContext);
+
     const processDate = (dateStr) => (dateStr ? dateStr.slice(0, 10) : '');
     const processedInitialData = {
         ...initialData,
@@ -20,7 +22,6 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
     }, [initialData]);
 
     const [eventData, setEventData] = useState(processedInitialData);
-    const [isUserSelectorOpen, setIsUserSelectorOpen] = useState(false);
     const [errors, setErrors] = useState({});
 
     const thumbnail = eventData.images?.find((img) => img.type === 'thumbnail') || null;
@@ -70,11 +71,23 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
         }
     };
 
+    // 사용자 선택 후 이벤트 데이터를 업데이트하고 중앙 상태의 드로어 닫기 액션 실행
     const handleUserSelection = (selectedUsers) => {
         handleChange('users', selectedUsers);
-        setIsUserSelectorOpen(false);
+        dispatch({
+            type: 'CLOSE_DRAWER',
+            drawer: 'isUserSelectorOpen',
+        });
     };
 
+    // 참가자 추가 버튼 클릭 시 중앙 상태의 드로어 열기 액션 실행
+    const openUserSelector = () => {
+        dispatch({
+            type: 'OPEN_DRAWER',
+            drawer: 'isUserSelectorOpen',
+        });
+    };
+    
     return (
         <>
             <div className="flex flex-col space-y-6 h-[calc(100vh-158px)] overflow-y-auto overflow-x-hidden p-6">
@@ -202,30 +215,12 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
                         <span>{eventData.users.length}명 선택됨</span>
                         <button
                             className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                            onClick={() => setIsUserSelectorOpen(true)}
+                            onClick={openUserSelector}
                         >
                         참가자 추가
                         </button>
                     </div>
                 </div>
-
-                {/* <StaffSelector
-                    availableUsers={initialData.users}
-                    selectedStaffs={eventData.staffs}
-                    onChange={(staffs) => handleChange('staffs', staffs)}
-                /> */}
-
-                {/* <UserSelector
-                    availableUsers={dummyUsers}  // 전체 유저 풀
-                    selectedUsers={eventData.users || []}  // 선택된 유저
-                    onChange={(users) => handleChange('users', users)}
-                />
-
-                <StaffSelector
-                    availableUsers={dummyStaffs}  // 전체 스태프 풀
-                    selectedStaffs={eventData.staffs}
-                    onChange={(staffs) => handleChange('staffs', staffs)}
-                /> */}
 
             </div>
             <div className="flex justify-between gap-x-3 px-6">
@@ -243,14 +238,9 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
                 </button>
             </div>
             {/* 메인 이벤트 참가자 선택 모달 */}
-                {isUserSelectorOpen && (
-                    <EventUserSelector 
-                        availableUsers={searchUsers}
-                        selectedUsers={eventData.users}
-                        onConfirm={handleUserSelection}
-                        onClose={() => setIsUserSelectorOpen(false)}
-                    />
-                )}
+            {state.drawers.isUserSelectorOpen && (
+                <EventUserSelector availableUsers={searchUsers} onConfirm={handleUserSelection} />
+            )}
         </>
     );
 };

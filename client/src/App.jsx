@@ -5,19 +5,22 @@ import UserManagementPage from './pages/userManagement/UserManagementPage.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import NotFound from './pages/NotFound.jsx';
 import EventDetail from './pages/event/EventDetail.jsx';
+import { EventProvider } from './context/EventContext';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/user-management" element={<UserManagementPage />} />
-          <Route path="/event/:id" element={<EventDetail />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <EventProvider>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/user-management" element={<UserManagementPage />} />
+              <Route path="/event/:id" element={<EventDetail />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </EventProvider>
+      </BrowserRouter>
   );
 }
 

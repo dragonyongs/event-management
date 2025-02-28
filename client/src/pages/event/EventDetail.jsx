@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import Drawer from 'react-modern-drawer';
-import 'react-modern-drawer/dist/index.css';
 import EventHeader from '../../components/EventDetail/EventHeader';
 import EventTabs from '../../components/EventDetail/EventTabs';
 import EventDetailSummary from '../../components/EventDetail/EventDetailSummary';
@@ -12,114 +10,71 @@ import GolfManagement from '../../components/EventDetail/GolfManagement';
 import TourManagement from '../../components/EventDetail/TourManagement';
 import AddGroupDrawer from '../../components/EventDetail/AddGroupDrawer';
 import GolfMemberEditDrawer from '../../components/GolfMemberEditDrawer';
-import { newEventData, dummyUsers } from '../../data/eventData';
-import { useEventDetail } from '../../hooks/useEventDetail';
-import { useGroupManagement } from '../../hooks/useGroupManagement';
-import { useMemberManagement } from '../../hooks/useMemberManagement';
 import EditEventDrawer from '../../components/EditEventDrawer';
 import EditUserDrawer from '../../components/EditUserDrawer';
 import { FiUserCheck, FiUsers } from 'react-icons/fi';
+import { useGroupManagement } from '../../hooks/useGroupManagement';
+import { useMemberManagement } from '../../hooks/useMemberManagement';
+// import { useEventDetail } from '../../hooks/useEventDetail';
+import { EventContext } from '../../context/EventContext';
 import useDrawerSize from '../../utils/useDrawerSize';
 
 const EventDetail = () => {
+    const { state, dispatch } = useContext(EventContext);
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState('overview');
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [drawerContent, setDrawerContent] = useState(null);
-    const [eventList, setEventList] = useState(newEventData);
-    const [selectedGroupDatas, setSelectedGroupDatas] = useState(null);
-    const [selectedEvent, setSelectedEvent] = useState(null);
-    const [isEditEventDrawer, setIsEditEventDrawer] = useState(false);
-
-    // 사용자(이벤트 상세 페이지 전용) 상태 관리
-    const [userList, setUserList] = useState([]);
-    const [isEditUserDrawerOpen, setIsEditUserDrawerOpen] = useState(false);
-    const [selectedUserForEdit, setSelectedUserForEdit] = useState(null);
-    
     const drawerSize = useDrawerSize();
 
+    // 이벤트 ID가 변경될 때 해당 이벤트를 선택하여 글로벌 상태에 업데이트
     useEffect(() => {
-        document.body.style.overflow = isEditEventDrawer ? 'hidden' : 'auto';
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, [isEditEventDrawer]);
-    
-    // 이벤트 로딩 및 사용자 정보 변환 (ID 배열 → user 객체 배열)
-    useEffect(() => {
-        const event = eventList.find((ev) => ev.id === id);
+        const event = state.events.find((ev) => ev.id === id);
         if (event) {
             let users = event.users;
             if (users && users.length && typeof users[0] === 'string') {
-                users = users.map(userId => dummyUsers.find(user => user.id === userId));
+                users = users.map(userId => state.users.find(user => user.id === userId));
             }
-            setUserList(users);
-            setSelectedEvent({ ...event, users });
+            dispatch({ type: 'SET_SELECTED_EVENT', event: { ...event, users } });
         }
-    }, [id, eventList]); 
+    }, [id, state.events, state.users, dispatch]);
 
-    // userList 변경 시 selectedEvent의 users도 업데이트
-    useEffect(() => {
-        if (selectedEvent) {
-            setSelectedEvent(prev => ({ ...prev, users: userList }));
-        }
-    }, [userList]);
-
-
-    const { groupForm, setGroupForm, handleGroupSubmit, handleCloseDrawer, openAddGroupDrawer } = useGroupManagement(
-        selectedEvent,
-        setSelectedEvent,
-        setSelectedGroupDatas,
-        setIsDrawerOpen,
-        setDrawerContent
+    // 그룹/멤버 관리 훅도 글로벌 상태와 dispatch를 사용하도록 변경
+    const { groupForm, setGroupForm, handleGroupSubmit, openAddGroupDrawer } = useGroupManagement(
+        state.selectedEvent,
+        dispatch
+        // (추가로 groupDatas, drawerContent 등 필요 시 글로벌 상태에 추가하거나 로컬 상태로 유지)
     );
 
-    const { memberForm, setMemberForm, isMemberEditOpen, setIsMemberEditOpen, handleAddMember, handleEditMember, handleMemberSubmit } = useMemberManagement(
-        selectedEvent,
-        setSelectedEvent,
-        setEventList,
-        selectedGroupDatas,
-        setSelectedGroupDatas
+    const { memberForm, handleAddMember, handleEditMember, handleMemberSubmit } = useMemberManagement(
+        state.selectedEvent,
+        dispatch
     );
 
-    const { onDropMember, handleDeleteGroup } = useEventDetail(selectedEvent, setSelectedEvent, eventList, setEventList);
+    // const { onDropMember, handleDeleteGroup } = useEventDetail(
+    //     state.selectedEvent,
+    //     dispatch,
+    //     state.events
+    // );
 
-    // 사용자 할당 업데이트: 개별 사용자에 대해 할당 상태 변경 (할당 해제는 null 전달)
+    // 사용자 할당 업데이트: 특정 사용자의 할당 상태를 변경
     const onAssignUser = (user, categoryKey) => {
-        const updatedUsers = userList.map(u => {
-        if (u.id === user.id) {
-            return { ...u, assignments: categoryKey ? [categoryKey] : [] };
-        }
-        return u;
-        });
-        setUserList(updatedUsers);
+        const updatedUser = { ...user, assignments: categoryKey ? [categoryKey] : [] };
+        dispatch({ type: 'UPDATE_USER', selectedUserForEdit: updatedUser });
     };
 
-    // 사용자 정보 업데이트 (예: 사용자 편집 후)
+    // 사용자 수정 후 업데이트
     const handleUpdateUser = (updatedUser) => {
-        const updatedUsers = userList.map(u => (u.id === updatedUser.id ? updatedUser : u));
-        setUserList(updatedUsers);
-        setIsEditUserDrawerOpen(false);
+        dispatch({ type: 'UPDATE_USER', selectedUserForEdit: updatedUser });
     };
 
-    // userList에서 해당 유저 제거
+    // 사용자 삭제: 사용자와 해당 사용자가 포함된 이벤트 업데이트
     const handleDeleteUser = (userId) => {
-        setUserList(prevUsers => prevUsers.filter(user => user.id !== userId));
-        setEventList(prevList => prevList.map(ev => {
-            if (ev.id === id) {
-                return { ...ev, users: ev.users.filter(u => u !== userId) };
-            }
-            return ev;
-        }));
+        console.log(userId)
+        dispatch({ type: 'DELETE_USER', userId });
     };
 
-    // 수정된 이벤트 데이터를 업데이트
+    // 이벤트 업데이트: 수정된 이벤트 데이터를 글로벌 상태에 반영
     const handleUpdateEvent = (updatedEvent) => {
-        setSelectedEvent(updatedEvent);
-        setEventList(prevList =>
-            prevList.map(ev => (ev.id === updatedEvent.id ? updatedEvent : ev))
-        );
-        setIsEditEventDrawer(false);
+        dispatch({ type: 'UPDATE_EVENT', event: updatedEvent });
     };
 
     const assignmentCategories = [
@@ -139,52 +94,59 @@ const EventDetail = () => {
         },
         {
             key: 'tour',
-            label: '관광 ',
+            label: '관광',
             style: 'bg-yellow-500',
             hoverStyle: 'hover:bg-yellow-600',
             icon: <FiUsers />,
         },
     ];
     
-    if (!selectedEvent) {
+    if (!state.selectedEvent) {
         return <div>이벤트를 찾을 수 없습니다.</div>;
     }
 
     return (
         <DndProvider backend={HTML5Backend}> 
             <div className="min-h-screen bg-gray-50">
-                <EventHeader event={selectedEvent} onEdit={() => setIsEditEventDrawer(true)} />  
+                <EventHeader 
+                    event={state.selectedEvent} 
+                    onEdit={() => dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawer' })} 
+                />  
                 <div className="container mx-auto px-4 py-6">
-                    <EventTabs activeTab={activeTab} setActiveTab={setActiveTab} eventTypes={selectedEvent.type} />
+                    <EventTabs 
+                        activeTab={activeTab} 
+                        setActiveTab={setActiveTab} 
+                        eventTypes={state.selectedEvent.type} 
+                    />
                     <div className="mt-6">
-                        {activeTab === 'overview' && <EventDetailSummary event={selectedEvent} />}
+                        {activeTab === 'overview' && <EventDetailSummary event={state.selectedEvent} />}
                         {activeTab === 'user' && (
                             <UserManagement
-                                users={userList}
+                                users={state.selectedEvent.users}
                                 assignmentCategories={assignmentCategories}
                                 onAssignUser={onAssignUser}
                                 onEditUser={(user) => {
-                                    setSelectedUserForEdit(user);
-                                    setIsEditUserDrawerOpen(true);
+                                    dispatch({ type: 'SET_SELECTED_USER', selectedUserForEdit: user });
+                                    dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditUserDrawer' });
                                 }}
                                 onDeleteUser={handleDeleteUser}
                             />
                         )}
                         {activeTab === 'golf' && (
                             <GolfManagement
-                                data={selectedEvent.subEvents?.find((sub) => sub.type === 'golf') || { groups: [] }}
-                                users={selectedEvent.users}
-                                onAddGroup={() => openAddGroupDrawer('golf')}
-                                onEditGroup={(group) => openAddGroupDrawer('golf', group)}
-                                onDeleteGroup={(groupId) => handleDeleteGroup(groupId)}
-                                onAddMember={(group) => handleAddMember(group)}
-                                onEditMember={handleEditMember}
-                                onDropMember={onDropMember}
+                                // data={state.selectedEvent.subEvents?.find((sub) => sub.type === 'golf') || { groups: [] }}
+                                // users={state.selectedEvent.users}
+                                // onAddGroup={() => openAddGroupDrawer('golf')}
+                                // onEditGroup={(group) => openAddGroupDrawer('golf', group)}
+                                // onDeleteGroup={(groupId) => handleDeleteGroup(groupId)}
+                                // onAddMember={(group) => handleAddMember(group)}
+                                // onEditMember={handleEditMember}
+                                // onDropMember={onDropMember}
                             />
                         )}
                         {activeTab === 'tour' && (
                             <TourManagement
-                                data={selectedEvent.subEvents?.find((sub) => sub.type === 'tour') || { busGroups: [], destinations: [] }}
+                                data={state.selectedEvent.subEvents?.find((sub) => sub.type === 'tour') || { busGroups: [], destinations: [] }}
                                 onAddBusGroup={() => openAddGroupDrawer('bus')}
                                 onAddDestination={() => openAddGroupDrawer('destination')}
                             />
@@ -192,57 +154,44 @@ const EventDetail = () => {
                     </div>
                 </div>
 
-                {/* {isDrawerOpen && ( */}
-                    <Drawer open={isDrawerOpen} onClose={handleCloseDrawer} duration="300" direction="right" size={480} className="overflow-y-auto">
-                        <AddGroupDrawer
-                            type={drawerContent}
-                            groupForm={groupForm}
-                            setGroupForm={setGroupForm}
-                            onSubmit={handleGroupSubmit}
-                            onClose={handleCloseDrawer}
-                        />
-                    </Drawer>
-                {/* )} */}
+                {/* 그룹 추가 드로어 */}
+            
+                <AddGroupDrawer
+                    isOpen={state.drawers.isGroupDrawerOpen}
+                    size={drawerSize}
+                    type={'golf'}  // 필요에 따라 드로어 콘텐츠를 글로벌 상태에서 관리 가능
+                    groupForm={groupForm}
+                    setGroupForm={setGroupForm}
+                    onSubmit={handleGroupSubmit}
+                    onClose={() => dispatch({ type: 'CLOSE_DRAWER', drawer: 'isGroupDrawerOpen' })}
+                />
 
-                {/* {isMemberEditOpen && ( */}
-                    <Drawer
-                        open={isMemberEditOpen}
-                        onClose={() => {
-                            setIsMemberEditOpen(false);
-                            setMemberForm(null);
-                        }}
-                        direction="right"
-                        size={drawerSize}
-                        duration="300"
-                        className="overflow-y-auto"
-                    >
-                        <GolfMemberEditDrawer
-                            event={selectedEvent}
-                            memberData={memberForm}
-                            onClose={() => {
-                                setIsMemberEditOpen(false);
-                                setMemberForm(null);
-                            }}
-                            onSubmit={(updatedMember) => handleMemberSubmit(updatedMember)}
-                        />
-                    </Drawer>
-                {/* )} */}
+                {/* 멤버 수정 드로어 (예시로 글로벌 드로어 상태에 isMemberEditDrawer를 추가했다고 가정) */}
+                
+                <GolfMemberEditDrawer
+                    isOpen={state.drawers.isMemberEditDrawer}
+                    size={drawerSize}
+                    event={state.selectedEvent}
+                    memberData={memberForm}
+                    onClose={() => dispatch({ type: 'CLOSE_DRAWER', drawer: 'isMemberEditDrawer' })}
+                    onSubmit={(updatedMember) => handleMemberSubmit(updatedMember)}
+                />
+                
 
                 <EditEventDrawer
-                    isOpen={isEditEventDrawer}
-                    event={selectedEvent}
-                    onClose={() => setIsEditEventDrawer(false)}
+                    isOpen={state.drawers.isEditEventDrawer}
+                    size={drawerSize}
+                    event={state.selectedEvent}
+                    onClose={() => dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditEventDrawer' })}
                     onUpdate={handleUpdateEvent}
                 />
 
-
-                {/* 사용자 수정 드로어 */}
-                {selectedUserForEdit && (
+                {state.selectedUserForEdit && (
                     <EditUserDrawer
                         size={drawerSize}
-                        isOpen={isEditUserDrawerOpen}
-                        initialUser={selectedUserForEdit}
-                        onClose={() => setIsEditUserDrawerOpen(false)}
+                        isOpen={state.drawers.isEditUserDrawer}
+                        initialUser={state.selectedUserForEdit}
+                        onClose={() => dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditUserDrawer' })}
                         onSubmit={handleUpdateUser}
                     />
                 )}

@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import UserManagement from '../../components/UserManagement';
 import CreateUserDrawer from '../../components/CreateUserDawer';
-import { useOutletContext } from 'react-router-dom';
 import EditUserDrawer from '../../components/EditUserDrawer';
 import useDrawerSize from '../../utils/useDrawerSize';
+import { EventContext } from '../../context/EventContext';
 
 const UserManagementPage = () => {
-    const { state, dispatch } = useOutletContext();
+    const { state, dispatch } = useContext(EventContext);
+    
     const drawerSize = useDrawerSize();
 
     const handleEditUser = (user) => {

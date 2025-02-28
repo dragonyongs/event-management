@@ -1,7 +1,11 @@
 import React from 'react';
 import { FiX } from 'react-icons/fi';
+import Drawer from 'react-modern-drawer';
+import 'react-modern-drawer/dist/index.css';
 
 const AddGroupDrawer = ({
+  isOpen,
+  size,
   isEdit,
   type,
   groupForm,
@@ -31,6 +35,14 @@ const AddGroupDrawer = ({
   };
 
   return (
+  <Drawer 
+      open={isOpen} 
+      onClose={onClose} 
+      duration="300" 
+      direction="right" 
+      size={size} 
+      className="overflow-y-auto"
+                >
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
       <div className="px-6 py-4 border-b flex justify-between items-center">
@@ -147,6 +159,8 @@ const AddGroupDrawer = ({
         </button>
       </div>
     </div>
+                </Drawer>
+
   );
 };
 
