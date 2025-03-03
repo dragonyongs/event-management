@@ -106,19 +106,21 @@ const UserManagement = ({
   };
 
   return (
-    <div className="p-6 space-y-6 bg-white rounded-lg shadow-md">
-      <div className="flex flex-col md:flex-row md:justify-between gap-4">
+    <div className="p-5 space-y-6 bg-white rounded-lg shadow-md">
+      <div className="flex flex-col lg:flex-row md:justify-between gap-4">
         {/* 검색 & 필터 */}
         <SearchAndFilter
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          border-b
+          border-gray-200
           filterDivision={filterDivision}
           setFilterDivision={setFilterDivision}
         />
 
         {/* 통합 배정 버튼 */}
         {enableAssignment && assignmentCategories.length > 0 && (
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap space-x-3">
             {assignmentCategories.map((cat) => (
               <button
                 key={cat.key}
@@ -126,10 +128,10 @@ const UserManagement = ({
                 disabled={
                   selectedUserIds.length === 0 && filterDivision === 'ALL'
                 }
-                className={`flex items-center px-4 py-2 rounded-md transition font-medium focus:outline-none ${
+                className={`flex items-center space-x-1.5 px-4 py-2 rounded-md transition font-medium focus:outline-none border ${
                   selectedUserIds.length === 0 && filterDivision === 'ALL'
                     ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                    : `${cat.style} ${cat.hoverStyle} text-white`
+                    : `${cat.bgStyle} ${cat.hoverStyle} ${cat.textStyle} ${cat.borderStyle}`
                 }`}
               >
                 {cat.icon && <span className="mr-2">{cat.icon}</span>}
@@ -137,7 +139,7 @@ const UserManagement = ({
                 {selectedUserIds.length > 0
                   ? ``
                   : filterDivision !== 'ALL'
-                    ? '전체 적용'
+                    ? '적용'
                     : ''}
               </button>
             ))}

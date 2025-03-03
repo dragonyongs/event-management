@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiCheck, FiUserMinus } from 'react-icons/fi';
 
 const UserTable = ({
@@ -12,6 +12,12 @@ const UserTable = ({
   onEventDeleteUser,
   enableAssignment,
 }) => {
+  const [selectedUser, setSelectedUser] = useState(1);
+
+  const handleCheck = (id) => {
+    setSelectedUser(id === selectedUser ? null : id);
+  };
+
   return (
     <div className="overflow-x-auto border rounded-lg shadow-sm">
       <table className="min-w-full text-sm text-left text-gray-700">
@@ -52,14 +58,21 @@ const UserTable = ({
             users.map((user) => (
               <tr
                 key={user.id}
-                className="border-b last:border-0 hover:bg-gray-50 transition-colors"
+                className={`border-b ${
+                  selectedUser === user.id
+                    ? 'bg-blue-50'
+                    : 'last:border-0 hover:bg-gray-50 transition-colors'
+                }`}
               >
                 <td className="p-4">
                   <input
                     type="checkbox"
                     onClick={(e) => e.stopPropagation()}
                     checked={selectedUserIds.includes(user.id)}
-                    onChange={() => toggleSelectUser(user.id)}
+                    onChange={() => {
+                      toggleSelectUser(user.id);
+                      handleCheck(user.id);
+                    }}
                     className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                   />
                 </td>
@@ -88,7 +101,7 @@ const UserTable = ({
                           <button
                             key={cat.key}
                             onClick={() => onAssignUser(user, cat.key)}
-                            className={`px-3 py-1 text-xs font-medium text-white rounded-md ${cat.style} ${cat.hoverStyle} transition`}
+                            className={`px-3 py-1 text-xs font-medium rounded-md ${cat.bgStyle} ${cat.hoverStyle} ${cat.textStyle} ${cat.borderStyle} transition`}
                           >
                             {cat.label}
                           </button>
@@ -98,12 +111,23 @@ const UserTable = ({
                           const category = assignmentCategories.find(
                             (cat) => cat.key === assignment
                           );
+                          const styles = {
+                            labelStyle: category?.labelStyle,
+                            bgStyle: category?.bgStyle,
+                            textStyle: category?.textStyle,
+                            borderStyle: category?.borderStyle,
+                          };
+
+                          const combinedStyle = Object.values(styles)
+                            .filter(Boolean)
+                            .join(' ');
+
                           return (
                             <button
                               key={assignment}
                               onClick={() => onAssignUser(user, assignment)}
-                              className={`inline-flex items-center px-3 py-1 text-xs font-medium text-white rounded-md ${
-                                category?.labelStyle || category.style
+                              className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-md ${
+                                category?.labelStyle || combinedStyle
                               } transition`}
                             >
                               <FiCheck className="mr-1" /> {category.label}
