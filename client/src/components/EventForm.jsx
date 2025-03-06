@@ -6,7 +6,9 @@ import { EventContext } from '../context/EventContext';
 
 const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
     const { state, dispatch } = useContext(EventContext);
-
+    const [imageError, setImageError] = useState(false);
+    const [errors, setErrors] = useState({});
+    
     const processDate = (dateStr) => (dateStr ? dateStr.slice(0, 10) : '');
     const processedInitialData = {
         ...initialData,
@@ -15,14 +17,12 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
         users: initialData.users || [],  // 초기값이 없으면 빈 배열
         staffs: initialData.staffs || [],
     };
+    const [eventData, setEventData] = useState(processedInitialData);
 
     useEffect(() => {
         setEventData(processedInitialData);
         setErrors({});
     }, [initialData]);
-
-    const [eventData, setEventData] = useState(processedInitialData);
-    const [errors, setErrors] = useState({});
 
     const thumbnail = eventData.images?.find((img) => img.type === 'thumbnail') || null;
 
@@ -87,6 +87,7 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
             drawer: 'isUserSelectorOpen',
         });
     };
+
     
     return (
         <>
@@ -127,6 +128,27 @@ const EventForm = ({ initialData, searchUsers, onSubmit, onDelete }) => {
                 </div>
                 {errors.dateRange && <p className="text-sm text-red-500">{errors.dateRange}</p>}
 
+                <div className="relative aspect-video bg-slate-100 rounded-xl flex justify-center items-center">
+                    
+                    {!thumbnail?.url && !thumbnail?.icon && <p className="text-slate-500">주소 또는 썸네일 아이콘을 선택하세요.</p> }
+
+                    {thumbnail?.url && !imageError && (
+                        <img
+                            src={thumbnail.url}
+                            alt={state.selectedEvent.title}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl"
+                            onError={() => setImageError(true)}
+                        />
+                        ) }
+                        
+                    {thumbnail?.icon && (
+                        <div
+                            className={`w-full h-full flex items-center justify-center text-3xl rounded-xl ${thumbnail?.bgColor}`}
+                        >
+                            {thumbnail?.icon}
+                        </div>
+                        )}
+                </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         이미지 URL 입력 (업로드 기능 미지원)
