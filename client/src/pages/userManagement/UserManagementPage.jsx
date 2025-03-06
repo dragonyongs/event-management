@@ -11,7 +11,7 @@ const UserManagementPage = () => {
   const drawerSize = useDrawerSize();
 
   const handleEditUser = (user) => {
-    dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditUserDrawer' });
+    dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditUserDrawerOpen' });
     dispatch({ type: 'SET_SELECTED_USER', selectedUserForEdit: user });
   };
 
@@ -37,26 +37,26 @@ const UserManagementPage = () => {
       />
 
       <CreateUserDrawer
-        isOpen={state.drawers.isCreateUserDrawer}
+        isOpen={state.drawers.isCreateUserDrawerOpen}
         onClose={() =>
-          dispatch({ type: 'CLOSE_DRAWER', drawer: 'isCreateUserDrawer' })
+          dispatch({ type: 'CLOSE_DRAWER', drawer: 'isCreateUserDrawerOpen' })
         }
         onSubmit={(newUser) => dispatch({ type: 'CREATE_USER', user: newUser })}
       />
 
       <EditUserDrawer
         size={drawerSize}
-        isOpen={state.drawers.isEditUserDrawer}
+        isOpen={state.drawers.isEditUserDrawerOpen}
         initialUser={state.selectedUserForEdit}
         onClose={() =>
-          dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditUserDrawer' })
+          dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditUserDrawerOpen' })
         }
         onDelete={(userId) => dispatch({ type: 'DELETE_USER', userId })}
         onSubmit={(user) =>
           dispatch({
             type: 'UPDATE_USER',
             selectedUserForEdit: user,
-            drawer: 'isEditUserDrawer',
+            drawer: 'isEditUserDrawerOpen',
           })
         }
       />

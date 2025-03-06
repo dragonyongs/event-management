@@ -12,9 +12,9 @@ const MainLayout = () => {
 
     // body overflow 처리 (드로어가 열리면 스크롤 방지)
     useEffect(() => {
-        const { isDrawerOpen, isCreateEventDrawer, isEditEventDrawer, isCreateUserDrawer } = drawers;
+        const { isDrawerOpen, isCreateEventDrawerOpen, isEditEventDrawerOpen, isCreateUserDrawerOpen } = drawers;
         document.body.style.overflow =
-            isDrawerOpen || isCreateEventDrawer || isEditEventDrawer || isCreateUserDrawer
+            isDrawerOpen || isCreateEventDrawerOpen || isEditEventDrawerOpen || isCreateUserDrawerOpen
                 ? 'hidden'
                 : 'auto';
         return () => {

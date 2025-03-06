@@ -63,7 +63,7 @@ const Dashboard = () => {
 
     const handleEditFromDetail = () => {
         dispatch({ type: 'CLOSE_DRAWER', drawer: 'isDrawerOpen' });
-        dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawer' });
+        dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawerOpen' });
     };
 
     return (
@@ -114,11 +114,11 @@ const Dashboard = () => {
 
             <EditEventDrawer
                 key={selectedEvent.id} 
-                isOpen={drawers.isEditEventDrawer}
+                isOpen={drawers.isEditEventDrawerOpen}
                 event={selectedEvent}
                 searchUsers={state.users}
                 onClose={() => { 
-                    dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditEventDrawer' });
+                    dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditEventDrawerOpen' });
                     dispatch({ type: 'RESET_EVENT_FORM' });
                 }}
                 onUpdate={handleUpdateEvent}

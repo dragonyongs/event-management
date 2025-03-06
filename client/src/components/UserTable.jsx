@@ -11,11 +11,13 @@ const UserTable = ({
   handleUserInfo,
   onEventDeleteUser,
   enableAssignment,
+  onSelectUser,
 }) => {
   const [selectedUser, setSelectedUser] = useState(1);
 
   const handleCheck = (id) => {
     setSelectedUser(id === selectedUser ? null : id);
+    onSelectUser(id === selectedUser ? null : id);
   };
 
   return (

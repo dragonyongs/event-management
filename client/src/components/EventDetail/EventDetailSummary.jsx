@@ -69,7 +69,7 @@ const EventDetailSummary = ({ event }) => {
                         <FiUser className="w-4 h-4 mr-2 text-blue-500" />
                         <span>참가자</span>
                     </div>
-                    <div className="flex items-end gap-x-2">
+                    <div className="flex flex-col gap-x-2">
                         <span className="text-2xl md:text-3xl font-bold text-gray-900">{userCount || 0}명</span>
                         <span className="text-sm text-gray-400">(스탭{eventStaffCount}명 포함)</span>
                     </div>
@@ -136,14 +136,14 @@ const EventDetailSummary = ({ event }) => {
                                         </div>
                                         <div className="text-xs text-gray-500 md:pl-12 space-y-1">
                                             <p>
-                                                인원: {group.members.length}명 {group.members.length !== 0 && (
-                                                group.members
-                                                .map((member) => {
-                                                    const userObj = state.users.find((user) => user.id === member.userId);
-                                                    return userObj ? userObj.name : '알 수 없음';
-                                                })
-                                                .join(', ')
-                                                )}
+                                                인원: {group.members.length}명 {group.members.length !== 0 && (`(
+                                                ${group.members
+                                                    .map((member) => {
+                                                        const userObj = state.users.find((user) => user.id === member.userId);
+                                                        return userObj ? userObj.name : '알 수 없음';
+                                                    })
+                                                    .join(', ')}
+                                                )`)}
                                             </p>
                                             <p>평균 핸디캡: {averageHandicap(group.members)}점</p>
                                         </div>

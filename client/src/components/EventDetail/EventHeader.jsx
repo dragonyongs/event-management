@@ -25,7 +25,7 @@ const EventHeader = ({activeTab, setActiveTab, eventTypes}) => {
             <button onClick={()=> navigate('/')} className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-lg hover:bg-blue-50 transition-colors">
               이벤트 목록
             </button>
-            <button onClick={() => dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawer' })} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            <button onClick={() => dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawerOpen' })} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
               수정하기
             </button>
           </div>

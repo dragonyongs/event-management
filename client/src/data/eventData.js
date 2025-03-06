@@ -177,7 +177,7 @@ export const newEventData = [
             id: "bus_1",
             name: "1호차",
             capacity: 45,
-            currentCount: 42,
+            currentCount: 45,
             schedule: {
               departure: "2024-06-17T07:50:00",
               arrival: "2024-06-17T10:00:00"
@@ -191,7 +191,7 @@ export const newEventData = [
             id: "bus_2",
             name: "2호차",
             capacity: 45,
-            currentCount: 40,
+            currentCount: 20,
             schedule: {
               departure: "2024-06-17T08:00:00",
               arrival: "2024-06-17T10:00:00"

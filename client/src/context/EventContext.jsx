@@ -6,13 +6,15 @@ const initialState = {
   users: dummyUsers,
   drawers: {
     isDrawerOpen: false,
-    isEditEventDrawer: false,
-    isCreateEventDrawer: false,
-    isCreateUserDrawer: false,
-    isEditUserDrawer: false,
+    isEditEventDrawerOpen: false,
+    isCreateEventDrawerOpen: false,
+    isCreateUserDrawerOpen: false,
+    isEditUserDrawerOpen: false,
     isGroupDrawerOpen: false,
-    isMemberEditDrawer: false,
+    isMemberEditDrawerOpen: false,
     isUserSelectorOpen: false,
+    isBusDrawerOpen:false,
+    isTourismDrawerOpen:false,
     drawerContent: null,
     selectedGroup: null,
     memberForm: null,
@@ -51,13 +53,13 @@ function reducer(state, action) {
       return {
         ...state,
         events: [...state.events, action.event],
-        drawers: { ...state.drawers, isCreateEventDrawer: false },
+        drawers: { ...state.drawers, isCreateEventDrawerOpen: false },
       };
     case 'CREATE_USER':
       return {
         ...state,
         users: [...state.users, action.user],
-        drawers: { ...state.drawers, isCreateUserDrawer: false },
+        drawers: { ...state.drawers, isCreateEventDrawerOpen: false },
       };
     case 'UPDATE_EVENT':
       return {
@@ -69,7 +71,7 @@ function reducer(state, action) {
           state.selectedEvent?.id === action.event.id
             ? action.event
             : state.selectedEvent,
-        drawers: { ...state.drawers, isEditEventDrawer: false },
+        drawers: { ...state.drawers, isEditEventDrawerOpen: false },
       };
     case 'UPDATE_USER':
       return {
@@ -79,7 +81,7 @@ function reducer(state, action) {
             ? action.selectedUserForEdit
             : u
         ),
-        drawers: { ...state.drawers, isEditUserDrawer: false },
+        drawers: { ...state.drawers, isEditUserDrawerOpen: false },
       };
     case 'SET_SELECTED_GROUP':
       return {

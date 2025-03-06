@@ -19,7 +19,7 @@ export const useMemberManagement = (selectedEvent, dispatch) => {
     // 멤버 수정 드로어 열기: 드로어에 멤버 폼과 선택된 그룹 정보를 전달
     dispatch({
       type: 'OPEN_DRAWER',
-      drawer: 'isMemberEditDrawer',
+      drawer: 'isMemberEditDrawerOpen',
       payload: {
         memberForm: newMember,
         selectedGroup: group,
@@ -32,7 +32,7 @@ export const useMemberManagement = (selectedEvent, dispatch) => {
     setIsMemberEditOpen(true);
     dispatch({
       type: 'OPEN_DRAWER',
-      drawer: 'isMemberEditDrawer',
+      drawer: 'isMemberEditDrawerOpen',
       payload: {
         memberForm: member,
         selectedGroup: group,
@@ -75,7 +75,7 @@ export const useMemberManagement = (selectedEvent, dispatch) => {
     dispatch({ type: 'UPDATE_EVENT', event: updatedEvent });
     setMemberForm(null);
     setIsMemberEditOpen(false);
-    dispatch({ type: 'CLOSE_DRAWER', drawer: 'isMemberEditDrawer' });
+    dispatch({ type: 'CLOSE_DRAWER', drawer: 'isMemberEditDrawerOpen' });
   };
 
   return {

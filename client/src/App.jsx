@@ -5,6 +5,7 @@ import UserManagementPage from './pages/userManagement/UserManagementPage.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import NotFound from './pages/NotFound.jsx';
 import EventDetail from './pages/event/EventDetail.jsx';
+import InputDrawerForm from './components/EventDetail/InputDrawerForm.jsx';
 import { EventProvider } from './context/EventContext';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/user-management" element={<UserManagementPage />} />
               <Route path="/event/:id" element={<EventDetail />} />
+              <Route path="/test" element={<InputDrawerForm />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

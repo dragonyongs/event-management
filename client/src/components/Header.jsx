@@ -25,7 +25,7 @@ const Header = ({ state, dispatch }) => {
             </button>
             <button
               onClick={() =>
-                dispatch({ type: 'OPEN_DRAWER', drawer: 'isCreateEventDrawer' })
+                dispatch({ type: 'OPEN_DRAWER', drawer: 'isCreateEventDrawerOpen' })
               }
               className="inline-flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg
                                     hover:bg-blue-700 active:bg-blue-800 
@@ -40,10 +40,10 @@ const Header = ({ state, dispatch }) => {
       </header>
 
       <CreateEventDrawer
-        isOpen={state.drawers.isCreateEventDrawer}
+        isOpen={state.drawers.isCreateEventDrawerOpen}
         searchUsers={state.users}
         onClose={() => {
-          dispatch({ type: 'CLOSE_DRAWER', drawer: 'isCreateEventDrawer' });
+          dispatch({ type: 'CLOSE_DRAWER', drawer: 'isCreateEventDrawerOpen' });
           // dispatch({ type: 'RESET_EVENT_FORM' });
         }}
         handleCreateEvent={(newEventData) => {

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import EventHeader from '../../components/EventDetail/EventHeader';
-import EventTabs from '../../components/EventDetail/EventTabs';
+// import EventTabs from '../../components/EventDetail/EventTabs';
 import EventDetailSummary from '../../components/EventDetail/EventDetailSummary';
 import UserManagement from '../../components/UserManagement';
 import GolfManagement from '../../components/EventDetail/GolfManagement';
@@ -126,7 +126,7 @@ const EventDetail = () => {
           setActiveTab={setActiveTab}
           eventTypes={state.selectedEvent.type}
           onEdit={() =>
-            dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawer' })
+            dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawerOpen' })
           }
         />
         <div className="container mx-auto px-4 py-6">
@@ -143,7 +143,7 @@ const EventDetail = () => {
                     type: 'SET_SELECTED_USER',
                     selectedUserForEdit: user,
                   });
-                  dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditUserDrawer' });
+                  dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditUserDrawerOpen' });
                 }}
                 onEventDeleteUser={handleEventDeleteUser}
               />
@@ -187,25 +187,25 @@ const EventDetail = () => {
           }
         />
 
-        {/* 멤버 수정 드로어 (예시로 글로벌 드로어 상태에 isMemberEditDrawer를 추가했다고 가정) */}
+        {/* 멤버 수정 드로어 (예시로 글로벌 드로어 상태에 isMemberEditDrawerOpen 추가했다고 가정) */}
 
         <GolfMemberEditDrawer
-          isOpen={state.drawers.isMemberEditDrawer}
+          isOpen={state.drawers.isMemberEditDrawerOpen}
           size={drawerSize}
           event={state.selectedEvent}
           memberData={memberForm}
           onClose={() =>
-            dispatch({ type: 'CLOSE_DRAWER', drawer: 'isMemberEditDrawer' })
+            dispatch({ type: 'CLOSE_DRAWER', drawer: 'isMemberEditDrawerOpen' })
           }
           onSubmit={(updatedMember) => handleMemberSubmit(updatedMember)}
         />
 
         <EditEventDrawer
-          isOpen={state.drawers.isEditEventDrawer}
+          isOpen={state.drawers.isEditEventDrawerOpen}
           size={drawerSize}
           event={state.selectedEvent}
           onClose={() =>
-            dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditEventDrawer' })
+            dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditEventDrawerOpen' })
           }
           onUpdate={handleUpdateEvent}
         />
@@ -213,10 +213,10 @@ const EventDetail = () => {
         {state.selectedUserForEdit && (
           <EditUserDrawer
             size={drawerSize}
-            isOpen={state.drawers.isEditUserDrawer}
+            isOpen={state.drawers.isEditUserDrawerOpen}
             initialUser={state.selectedUserForEdit}
             onClose={() =>
-              dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditUserDrawer' })
+              dispatch({ type: 'CLOSE_DRAWER', drawer: 'isEditUserDrawerOpen' })
             }
             onSubmit={handleUpdateUser}
           />

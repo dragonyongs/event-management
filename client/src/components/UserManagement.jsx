@@ -3,6 +3,7 @@ import SearchAndFilter from './SearchAndFilter';
 import UserTable from './UserTable';
 import Pagination from './Pagination';
 import { LuUsers } from 'react-icons/lu';
+import { IoMdClose } from "react-icons/io";
 
 const UserManagement = ({
   dispatch,
@@ -118,9 +119,9 @@ const UserManagement = ({
           setFilterDivision={setFilterDivision}
         />
 
-        {/* 통합 배정 버튼 */}
+        {/* 데스크탑 전용 통합 배정 버튼 */}
         {enableAssignment && assignmentCategories.length > 0 && (
-          <div className="flex flex-wrap space-x-3">
+          <div className="hidden md:flex flex-wrap space-x-3">
             {assignmentCategories.map((cat) => (
               <button
                 key={cat.key}
@@ -149,7 +150,7 @@ const UserManagement = ({
         {!enableAssignment && (
           <button
             onClick={() =>
-              dispatch({ type: 'OPEN_DRAWER', drawer: 'isCreateUserDrawer' })
+              dispatch({ type: 'OPEN_DRAWER', drawer: 'isCreateUserDrawerOpen' })
             }
             className="inline-flex items-center px-4 py-2.5 bg-white text-blue-600 rounded-lg border border-blue-500
                                 hover:text-blue-700 hover:bg-blue-50 active:bg-blue-300 
@@ -161,6 +162,7 @@ const UserManagement = ({
           </button>
         )}
       </div>
+      
       {selectedUserIds.length > 0 && enableAssignment && (
         <div className="flex justify-between">
           <div className="flex items-center gap-x-4">
@@ -169,13 +171,14 @@ const UserManagement = ({
           <div>
             <button
               onClick={handleBulkDelete}
-              className={`flex items-center px-4 py-2 rounded-md transition font-medium focus:outline-none bg-red-500 text-white`}
+              className="flex items-center px-4 py-2 rounded-md transition font-medium focus:outline-none bg-red-500 text-white"
             >
               선택 제외
             </button>
           </div>
         </div>
       )}
+      
       {/* 사용자 테이블 */}
       <UserTable
         users={currentPageData}
@@ -186,7 +189,6 @@ const UserManagement = ({
         toggleSelectAllOnPage={toggleSelectAllOnPage}
         handleUserInfo={handleUserInfo}
         onEventDeleteUser={onEventDeleteUser}
-        enableAssignment={enableAssignment}
       />
 
       {/* 페이지네이션 */}
@@ -196,6 +198,40 @@ const UserManagement = ({
           totalPages={totalPages}
           handlePageChange={handlePageChange}
         />
+      )}
+
+      {/* 모바일 하단 일괄 배정 레이어 */}
+      {selectedUserIds.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg md:hidden p-4 z-10">
+          <div className="flex justify-between items-center">
+            <div className="flex flex-wrap gap-2">
+              {users
+                .filter(user => selectedUserIds.includes(user.id))
+                .map(user => (
+                  <span key={user.id} className="px-2 py-1 bg-gray-200 rounded text-sm">
+                    {user.name}
+                  </span>
+              ))}
+            </div>
+            <button 
+              onClick={() => setSelectedUserIds([])}
+              className="text-gray-400 hover:text-gray-500"
+            >
+              <IoMdClose className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="mt-2 flex space-x-2">
+            {assignmentCategories.map((cat) => (
+              <button
+                key={cat.key}
+                onClick={() => handleBulkAssignUnified(cat.key)}
+                className={`flex-1 px-3 py-2 rounded-md transition font-medium focus:outline-none ${cat.bgStyle} ${cat.hoverStyle} ${cat.textStyle} ${cat.borderStyle}`}
+              >
+                {cat.label} 일괄
+              </button>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

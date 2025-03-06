@@ -59,7 +59,7 @@ const GolfManagement = () => {
         console.log('🔵 onAddMember 실행됨');
         dispatch({
             type: 'OPEN_DRAWER',
-            drawer: 'isMemberEditDrawer',
+            drawer: 'isMemberEditDrawerOpen',
             payload: { memberForm: null, selectedGroup: group },
         });
     };
@@ -67,7 +67,7 @@ const GolfManagement = () => {
     const onEditMember = (group, member) => {
         dispatch({
             type: 'OPEN_DRAWER',
-            drawer: 'isMemberEditDrawer',
+            drawer: 'isMemberEditDrawerOpen',
             payload: { memberForm: member, selectedGroup: group },
         });
     };
