@@ -9,21 +9,12 @@ import { getCount, mapUserIdsToUserObjects } from '../../utils/eventUtils';
 
 // 평균 핸디캡 계산 함수
 const averageHandicap = (members) => {
-    console.log(members)
-    // members: {
-    //     "userId": "user_005",
-    //     "handicap": 18,
-    //     "score": {
-    //         "total": null,
-    //         "holes": []
-    //     },
-    //     "reason": null,
-    //     "status": "confirmed"
-    // }
+    if (!members || members.length === 0) {
+        return 0;
+    }
     const total = members.reduce((sum, m) => sum + m.handicap, 0);
     return (total / members.length).toFixed(1);
 };
-
 // 총 승객 수 계산 함수
 const totalPassengers = (buses) => {
     return buses.reduce((sum, bus) => sum + bus.currentCount, 0);
@@ -51,7 +42,7 @@ const EventDetailSummary = ({ event }) => {
     const eventUsers = mapUserIdsToUserObjects(event.users, state.users);
     const findStaffs = eventUsers.filter(user => user.division === "스태프");
     const eventStaffCount = getCount(findStaffs);
-    const eventUserCount = getCount(event.users) - eventStaffCount;
+    // const eventUserCount = getCount(event.users) - eventStaffCount;
 
     const userCount = getCount(event.users);
 
@@ -144,7 +135,16 @@ const EventDetailSummary = ({ event }) => {
                                             <span>티타임: {formatDateTime(group.teeTime.start)} (예상 시간: {group.teeTime.estimatedDuration})</span>
                                         </div>
                                         <div className="text-xs text-gray-500 md:pl-12 space-y-1">
-                                            <p>인원: 3명 ()</p>
+                                            <p>
+                                                인원: {group.members.length}명 {group.members.length !== 0 && (
+                                                group.members
+                                                .map((member) => {
+                                                    const userObj = state.users.find((user) => user.id === member.userId);
+                                                    return userObj ? userObj.name : '알 수 없음';
+                                                })
+                                                .join(', ')
+                                                )}
+                                            </p>
                                             <p>평균 핸디캡: {averageHandicap(group.members)}점</p>
                                         </div>
                                     </div>
