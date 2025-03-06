@@ -28,6 +28,7 @@ const UserManagementPage = () => {
       <h1 className="text-3xl font-bold mb-4">사용자 관리</h1>
       <UserManagement
         users={state.users}
+        state={state}
         dispatch={dispatch}
         onAssignUser={handleAssignUser}
         onEditUser={handleEditUser}

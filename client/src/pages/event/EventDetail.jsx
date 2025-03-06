@@ -122,17 +122,14 @@ const EventDetail = () => {
       <div className="min-h-screen bg-gray-50">
         <EventHeader
           event={state.selectedEvent}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          eventTypes={state.selectedEvent.type}
           onEdit={() =>
             dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawer' })
           }
         />
         <div className="container mx-auto px-4 py-6">
-          <EventTabs
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            eventTypes={state.selectedEvent.type}
-          />
-          <div className="mt-6">
             {activeTab === 'overview' && (
               <EventDetailSummary event={state.selectedEvent} />
             )}
@@ -174,7 +171,6 @@ const EventDetail = () => {
                 onAddDestination={() => openAddGroupDrawer('destination')}
               />
             )}
-          </div>
         </div>
 
         {/* 그룹 추가 드로어 */}

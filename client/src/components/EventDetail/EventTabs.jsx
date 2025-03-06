@@ -8,7 +8,7 @@ const EventTabs = ({ activeTab, setActiveTab, eventTypes }) => {
   ];
 
   return (
-    <div className="border-b border-gray-200">
+    // <div className="border-b border-gray-200">
       <nav className="flex space-x-8">
         {tabs.map((tab) => (
           <button
@@ -25,7 +25,7 @@ const EventTabs = ({ activeTab, setActiveTab, eventTypes }) => {
           </button>
         ))}
       </nav>
-    </div>
+    // </div>
   );
 };
 

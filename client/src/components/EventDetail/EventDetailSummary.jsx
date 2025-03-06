@@ -1,21 +1,25 @@
-import React from 'react';
-import { 
-    FaUsers, 
-    FaClock, 
-    FaCalendarAlt 
-} from 'react-icons/fa';
+import React, { useContext } from 'react';
+import { EventContext } from '../../context/EventContext';
 import { FiUser, FiMapPin } from "react-icons/fi";
 import { RiNotificationLine } from "react-icons/ri";
 import { LuClock4, LuBusFront } from "react-icons/lu";
 import { AiOutlineTeam } from "react-icons/ai";
-
 import { IoMdInformationCircleOutline } from "react-icons/io";
-
-import { RiGolfBallLine, RiBusLine } from 'react-icons/ri';
-import { getCount } from '../../utils/eventUtils';
+import { getCount, mapUserIdsToUserObjects } from '../../utils/eventUtils';
 
 // 평균 핸디캡 계산 함수
 const averageHandicap = (members) => {
+    console.log(members)
+    // members: {
+    //     "userId": "user_005",
+    //     "handicap": 18,
+    //     "score": {
+    //         "total": null,
+    //         "holes": []
+    //     },
+    //     "reason": null,
+    //     "status": "confirmed"
+    // }
     const total = members.reduce((sum, m) => sum + m.handicap, 0);
     return (total / members.length).toFixed(1);
 };
@@ -42,6 +46,13 @@ const formatDateTime = (dateTime) => {
 };
 
 const EventDetailSummary = ({ event }) => {
+    const { state, dispatch } = useContext(EventContext);
+    
+    const eventUsers = mapUserIdsToUserObjects(event.users, state.users);
+    const findStaffs = eventUsers.filter(user => user.division === "스태프");
+    const eventStaffCount = getCount(findStaffs);
+    const eventUserCount = getCount(event.users) - eventStaffCount;
+
     const userCount = getCount(event.users);
 
     return (
@@ -67,8 +78,9 @@ const EventDetailSummary = ({ event }) => {
                         <FiUser className="w-4 h-4 mr-2 text-blue-500" />
                         <span>참가자</span>
                     </div>
-                    <div className="flex items-center">
-                        <span className="text-3xl font-bold text-gray-900">{userCount || 0}명</span>
+                    <div className="flex items-end gap-x-2">
+                        <span className="text-2xl md:text-3xl font-bold text-gray-900">{userCount || 0}명</span>
+                        <span className="text-sm text-gray-400">(스탭{eventStaffCount}명 포함)</span>
                     </div>
                 </div>
                 
@@ -79,7 +91,7 @@ const EventDetailSummary = ({ event }) => {
                         <span>소요 시간</span>
                     </div>
                     <div className="flex items-center">
-                        <span className="text-3xl font-bold text-gray-900">{event.duration || '0'}시간</span>
+                        <span className="text-2xl md:text-3xl font-bold text-gray-900">{event.duration || '0'}시간</span>
                     </div>
                 </div>
                 
@@ -90,7 +102,7 @@ const EventDetailSummary = ({ event }) => {
                         <span>알림</span>
                     </div>
                     <div className="flex items-center">
-                        <span className="text-3xl font-bold text-gray-900">{event.date || '없음'}</span>
+                        <span className="text-2xl md:text-3xl font-bold text-gray-900">{event.date || '없음'}</span>
                     </div>
                 </div>
             </div>
@@ -131,7 +143,10 @@ const EventDetailSummary = ({ event }) => {
                                             <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs mb-2 md:mb-0 md:mr-2">{group.name}</span>
                                             <span>티타임: {formatDateTime(group.teeTime.start)} (예상 시간: {group.teeTime.estimatedDuration})</span>
                                         </div>
-                                        <div className="text-xs text-gray-500 md:pl-12">인원: 3명 (팀장: 김대호, 5명)</div>
+                                        <div className="text-xs text-gray-500 md:pl-12 space-y-1">
+                                            <p>인원: 3명 ()</p>
+                                            <p>평균 핸디캡: {averageHandicap(group.members)}점</p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

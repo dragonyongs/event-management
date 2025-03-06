@@ -3,9 +3,10 @@ import EventDetailSummary from './EventDetailSummary';
 import { getCount, mapUserIdsToUserObjects } from '../../utils/eventUtils';
 import { useOutletContext } from 'react-router-dom';
 import { dummyUsers } from '../../data/eventData';
-
+import { formatDate } from '../../utils/eventUtils';
 import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
+
 
 const EventDetailDrawer = ({ size, isOpen, onEdit, selectedEvent, onClose, onViewFullScreen }) => {
     const { state } = useOutletContext();
@@ -68,7 +69,7 @@ const EventDetailDrawer = ({ size, isOpen, onEdit, selectedEvent, onClose, onVie
                         <h3 className="text-xl font-semibold text-gray-900">
                             {state.selectedEvent.title}
                         </h3>
-                        <p className="text-sm text-gray-500 mt-1">{state.selectedEvent.date}</p>
+                        <p className="text-sm text-gray-500 mt-1">{formatDate(selectedEvent.startDate)} ~ {formatDate(selectedEvent.endDate)}</p>
                         </div>
 
                         <div className="flex items-center space-x-4">

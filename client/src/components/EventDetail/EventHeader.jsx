@@ -1,38 +1,23 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCount, mapUserIdsToUserObjects } from '../../utils/eventUtils';
 import { EventContext } from '../../context/EventContext';
+import { formatDate } from '../../utils/eventUtils';
+import EventTabs from './EventTabs';
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}년 ${month}월 ${day}일`;
-};
-
-const EventHeader = () => { 
+const EventHeader = ({activeTab, setActiveTab, eventTypes}) => { 
   const navigate = useNavigate();
   const { state, dispatch } = useContext(EventContext);
   const { events, drawers, selectedEvent } = state;
-  const eventUsers = mapUserIdsToUserObjects(selectedEvent.users, state.users);
-  const findStaffs = eventUsers.filter(user => user.division === "스태프");
-  const eventStaffCount = getCount(findStaffs);
-  const eventUserCount = getCount(selectedEvent.users) - eventStaffCount;
-  
 
   return (
     <div className="sticky z-50 top-0 left-0 bg-white border-b">
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex items-start justify-between">
+      <div className="container mx-auto px-4 pt-6">
+        <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row items-start md:items-center justify-between mb-3">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{selectedEvent.title}</h1>
             <div className="mt-2 space-y-1">
               <p className="text-gray-600">
                 {formatDate(selectedEvent.startDate)} ~ {formatDate(selectedEvent.endDate)}
-              </p>
-              <p className="text-gray-600">
-                참가자 {eventUserCount}명 · 스텝 {eventStaffCount}명
               </p>
             </div>
           </div>
@@ -45,6 +30,11 @@ const EventHeader = () => {
             </button>
           </div>
         </div>
+        <EventTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          eventTypes={eventTypes}
+      />
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ const SearchBar = ({ onSearch, isScrolled }) => {
   };
 
   return (
-    <div className={`w-full px-4 pt-6 transition-all duration-1000 ${isScrolled ? 'hidden' : 'block'}`}>
+    <div className={`w-full px-4 pt-6 pb-3 transition-all duration-1000 ${isScrolled ? 'hidden' : 'block'}`}>
       <div className="relative max-w-2xl mx-auto">
         <div className={`relative rounded-xl overflow-hidden ${isFocused ? 'ring-2 ring-blue-500 bg-white shadow-lg' : 'bg-white/80 shadow-sm hover:shadow' } transition-all duration-200`}>
           <input
