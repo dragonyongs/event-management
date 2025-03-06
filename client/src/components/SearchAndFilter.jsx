@@ -36,7 +36,7 @@ const SearchAndFilter = ({
             { value: '스태프', label: '스태프' },
             { value: '대표', label: '대표' },
             { value: '임원', label: '임원' },
-            { value: '엄체', label: '엄체' },
+            { value: '업체', label: '업체' },
           ]}
           value={filterDivision}
           onChange={(e) => setFilterDivision(e.target.value)}

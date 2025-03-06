@@ -69,16 +69,16 @@ const Dashboard = () => {
     return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
         <div
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`sticky z-50 top-0 left-0 transition-all duration-300 ${
             isScrolled
             ? 'bg-white/80 backdrop-blur-lg shadow-sm'
             : 'bg-transparent'
         }`}
         >
-            <SearchBar onSearch={setSearchQuery} />
+            <SearchBar onSearch={setSearchQuery} isScrolled={isScrolled} />
             <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
 
+        </div>
         <main className="container mx-auto px-4 py-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {currentEvents.map((event) => (

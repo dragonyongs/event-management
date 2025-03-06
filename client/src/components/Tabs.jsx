@@ -7,7 +7,7 @@ const tabs = [
 
 const Tabs = ({ activeTab, setActiveTab }) => {
   return (
-    <div className="border-b border-gray-100">
+    <div className="sticky top-0 left-0 z-50 border-b border-gray-100">
       <div className="container mx-auto px-4">
         <div className="flex space-x-1 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => (
@@ -15,11 +15,11 @@ const Tabs = ({ activeTab, setActiveTab }) => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-3 text-sm font-medium transition-all duration-200
-                                      relative ${
-                                        activeTab === tab.id
-                                          ? 'text-blue-600'
-                                          : 'text-gray-500 hover:text-gray-700'
-                                      }`}
+                relative ${
+                  activeTab === tab.id
+                    ? 'text-blue-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               {tab.label}
               {activeTab === tab.id && (

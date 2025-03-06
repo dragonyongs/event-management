@@ -1,9 +1,12 @@
 import React, { useContext, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import { EventContext } from '../context/EventContext';
 
 const MainLayout = () => {
+    const location = useLocation();
+    const hideHeader = location.pathname.startsWith('/event/');
+
     const { state, dispatch } = useContext(EventContext);
     const { drawers } = state;
 
@@ -21,7 +24,7 @@ const MainLayout = () => {
 
     return (
         <div className='h-layout'>
-            <Header state={state} dispatch={dispatch} />
+            {!hideHeader && <Header state={state} dispatch={dispatch} />}
             <main className='h-full bg-gray-50'>
                 <Outlet context={{ state, dispatch }} />
             </main>

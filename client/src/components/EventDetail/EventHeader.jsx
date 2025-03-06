@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getCount, mapUserIdsToUserObjects } from '../../utils/eventUtils';
 import { EventContext } from '../../context/EventContext';
 
@@ -11,6 +12,7 @@ const formatDate = (dateString) => {
 };
 
 const EventHeader = () => { 
+  const navigate = useNavigate();
   const { state, dispatch } = useContext(EventContext);
   const { events, drawers, selectedEvent } = state;
   const eventUsers = mapUserIdsToUserObjects(selectedEvent.users, state.users);
@@ -20,7 +22,7 @@ const EventHeader = () => {
   
 
   return (
-    <div className="bg-white border-b">
+    <div className="sticky z-50 top-0 left-0 bg-white border-b">
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-start justify-between">
           <div>
@@ -34,9 +36,14 @@ const EventHeader = () => {
               </p>
             </div>
           </div>
-          <button onClick={() => dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawer' })} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-            수정하기
-          </button>
+          <div className="flex gap-x-4">
+            <button onClick={()=> navigate('/')} className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-lg hover:bg-blue-50 transition-colors">
+              이벤트 목록
+            </button>
+            <button onClick={() => dispatch({ type: 'OPEN_DRAWER', drawer: 'isEditEventDrawer' })} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+              수정하기
+            </button>
+          </div>
         </div>
       </div>
     </div>

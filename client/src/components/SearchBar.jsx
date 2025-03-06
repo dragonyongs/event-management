@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LuSearch } from 'react-icons/lu';
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = ({ onSearch, isScrolled }) => {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -12,16 +12,9 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <div className="w-full px-4 py-3 bg-gray-50">
+    <div className={`w-full px-4 pt-6 transition-all duration-1000 ${isScrolled ? 'hidden' : 'block'}`}>
       <div className="relative max-w-2xl mx-auto">
-        <div className={`
-          relative rounded-xl overflow-hidden
-          ${isFocused 
-            ? 'ring-2 ring-blue-500 bg-white shadow-lg' 
-            : 'bg-white/80 shadow-sm hover:shadow'
-          }
-          transition-all duration-200
-        `}>
+        <div className={`relative rounded-xl overflow-hidden ${isFocused ? 'ring-2 ring-blue-500 bg-white shadow-lg' : 'bg-white/80 shadow-sm hover:shadow' } transition-all duration-200`}>
           <input
             name="search"
             type="text"

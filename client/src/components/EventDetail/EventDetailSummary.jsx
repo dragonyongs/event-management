@@ -4,6 +4,13 @@ import {
     FaClock, 
     FaCalendarAlt 
 } from 'react-icons/fa';
+import { FiUser, FiMapPin } from "react-icons/fi";
+import { RiNotificationLine } from "react-icons/ri";
+import { LuClock4, LuBusFront } from "react-icons/lu";
+import { AiOutlineTeam } from "react-icons/ai";
+
+import { IoMdInformationCircleOutline } from "react-icons/io";
+
 import { RiGolfBallLine, RiBusLine } from 'react-icons/ri';
 import { getCount } from '../../utils/eventUtils';
 
@@ -21,9 +28,9 @@ const totalPassengers = (buses) => {
 // 이벤트 상태에 따른 색상 반환 함수
 const getStatusColor = (status) => {
     const colors = {
-        active: 'bg-green-100 text-green-800',
-        pending: 'bg-yellow-100 text-yellow-800',
-        completed: 'bg-gray-100 text-gray-800'
+        active: 'from-green-50 to-lime-50 border-green-100',
+        pending: 'from-amber-50 to-yellow-50 border-yellow-100',
+        completed: 'from-slate-50 to-gray-50 border-gray-100'
     };
     return colors[status] || colors.pending;
 };
@@ -40,99 +47,159 @@ const EventDetailSummary = ({ event }) => {
     return (
         <div className="space-y-4">
             {/* 상태 배너 */}
-            <div className={`w-full p-3 rounded-lg flex items-center justify-between ${getStatusColor(event.status)}`}>
-                <span className="font-medium">이벤트 상태</span>
-                <span className="font-bold">{event.status === 'active' ? '진행중' : '대기중'}</span>
+            <div className={`bg-gradient-to-r rounded-lg p-4 mb-6 border ${getStatusColor(event.status)}`}>
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                        <IoMdInformationCircleOutline className="text-amber-500 w-5 h-5 mr-2" />
+                        <h2 className="text-lg font-medium text-gray-900">이벤트 상태</h2>
+                    </div>
+                    <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-medium rounded-full">
+                        {event.status === 'active' ? '진행중' : '대기중'}
+                    </span>
+                </div>
             </div>
 
             {/* 기본 정보 요약 */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <div className="flex items-center space-x-2">
-                        <FaUsers className="h-5 w-5 text-blue-500" />
-                        <div>
-                            <p className="text-sm text-gray-500">참가자</p>
-                            <p className="text-lg font-bold">{userCount || 0}명</p>
-                        </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+                {/* Stat 1 */}
+                <div className="bg-white rounded-lg shadow p-6 border border-gray-100">
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                        <FiUser className="w-4 h-4 mr-2 text-blue-500" />
+                        <span>참가자</span>
+                    </div>
+                    <div className="flex items-center">
+                        <span className="text-3xl font-bold text-gray-900">{userCount || 0}명</span>
                     </div>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <div className="flex items-center space-x-2">
-                        <FaClock className="h-5 w-5 text-green-500" />
-                        <div>
-                            <p className="text-sm text-gray-500">소요 시간</p>
-                            <p className="text-lg font-bold">{event.duration || '3'}시간</p>
-                        </div>
+                
+                {/* Stat 2 */}
+                <div className="bg-white rounded-lg shadow p-6 border border-gray-100">
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                        <LuClock4 className="w-4 h-4 mr-2 text-green-500" />
+                        <span>소요 시간</span>
+                    </div>
+                    <div className="flex items-center">
+                        <span className="text-3xl font-bold text-gray-900">{event.duration || '0'}시간</span>
                     </div>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <div className="flex items-center space-x-2">
-                        <FaCalendarAlt className="h-5 w-5 text-purple-500" />
-                        <div>
-                            <p className="text-sm text-gray-500">일정</p>
-                            <p className="text-lg font-bold">{event.date || 'N/A'}</p>
-                        </div>
+                
+                {/* Stat 3 */}
+                <div className="bg-white rounded-lg shadow p-6 border border-gray-100">
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                        <RiNotificationLine className="w-4 h-4 mr-2 text-purple-500" />
+                        <span>알림</span>
+                    </div>
+                    <div className="flex items-center">
+                        <span className="text-3xl font-bold text-gray-900">{event.date || '없음'}</span>
                     </div>
                 </div>
             </div>
 
+
             {/* 이벤트 타입별 상세 정보 */}
             {event.subEvents?.find((sub) => sub.type === 'golf') && (
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <div className="flex items-center space-x-2 mb-3">
-                        <RiGolfBallLine className="text-green-500" />
-                        <h4 className="font-semibold text-gray-900">골프 정보</h4>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 overflow-hidden">
+                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                        <div className="flex items-center">
+                            <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                            <h2 className="text-lg font-medium text-gray-900">골프 정보</h2>
+                        </div>
                     </div>
-                    <p className="text-sm text-gray-600">경기장: {event.subEvents.find((sub) => sub.type === 'golf').venue || event.subEvents.find((sub) => sub.type === 'golf').location}</p>
-                    <p className="text-sm text-gray-600">
-                        총 그룹: {event.subEvents.find((sub) => sub.type === 'golf').groups?.length || 0}팀
-                    </p>
-                    <div className="mt-2 space-y-2">
-                        {event.subEvents.find((sub) => sub.type === 'golf').groups?.map((group) => (
-                            <div key={group.id} className="border p-2 rounded-lg">
-                                <h5 className="text-sm font-semibold">
-                                    {group.name} - 티타임: {formatDateTime(group.teeTime.start)} (예상 시간: {group.teeTime.estimatedDuration})
-                                </h5>
-                                <p className="text-xs text-gray-500">
-                                    인원: {group.members?.length || 0}명 (평균 핸디캡: {group.members ? averageHandicap(group.members) : 'N/A'})
-                                </p>
+
+                    <div className="p-6">
+                        <div className="mb-4">
+                            <div className="flex items-center gap-x-3 text-gray-800">
+                                <div className="flex items-center min-w-10">
+                                    <AiOutlineTeam className="w-4 h-4 mr-1 text-gray-400" />
+                                    <div className="text-sm text-gray-500">장소</div>
+                                </div>
+                                <span>{event.subEvents.find((sub) => sub.type === 'golf').venue || event.subEvents.find((sub) => sub.type === 'golf').location}</span>
                             </div>
-                        ))}
+
+                            <div className="flex items-center gap-x-3 text-gray-800">
+                                <div className="flex items-center min-w-10">
+                                    <FiMapPin className="w-4 h-4 mr-1 text-gray-400" />
+                                    <div className="text-sm text-gray-500">그룹</div>
+                                </div>
+                                <span>{event.subEvents.find((sub) => sub.type === 'golf').groups?.length || 0}팀</span>
+                            </div>
+
+                            <div className="mt-3 border-t border-gray-100 pt-4 space-y-4">
+                                {event.subEvents.find((sub) => sub.type === 'golf').groups?.map((group) => (
+                                    <div key={group.id} className="bg-gray-50 rounded p-4">
+                                        <div className="flex flex-col items-start md:flex-row md:items-center text-sm font-medium text-gray-700 mb-2">
+                                            <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs mb-2 md:mb-0 md:mr-2">{group.name}</span>
+                                            <span>티타임: {formatDateTime(group.teeTime.start)} (예상 시간: {group.teeTime.estimatedDuration})</span>
+                                        </div>
+                                        <div className="text-xs text-gray-500 md:pl-12">인원: 3명 (팀장: 김대호, 5명)</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
 
+            {/* Tourism Information */}
             {event.subEvents?.find((sub) => sub.type === 'tour') && (
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <div className="flex items-center space-x-2 mb-3">
-                        <RiBusLine className="text-blue-500" />
-                        <h4 className="font-semibold text-gray-900">관광 정보</h4>
-                    </div>
-                    <p className="text-sm text-gray-600">
-                        총 인원: {totalPassengers(event.subEvents.find((sub) => sub.type === 'tour').busGroups)}명
-                    </p>
-                    <p className="text-sm text-gray-600">
-                        운행 버스: {event.subEvents.find((sub) => sub.type === 'tour').busGroups?.length || 0}대
-                    </p>
-                    <div className="mt-2 space-y-2">
-                        {event.subEvents.find((sub) => sub.type === 'tour').destinations?.map((dest) => (
-                            <div key={dest.id} className="border p-2 rounded-lg">
-                                <h5 className="text-sm font-semibold">{dest.name}</h5>
-                                <p className="text-xs text-gray-500">
-                                    방문 시간: {formatDateTime(dest.schedule.start)} ~ {formatDateTime(dest.schedule.end)} | 참여: {dest.currentCount} / {dest.maxCapacity}명
-                                </p>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <div className="flex items-center">
+                                <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                                <h2 className="text-lg font-medium text-gray-900">관광 정보</h2>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                        
+                        <div className="p-6">
+                            <div className="mb-4">
+                                <div className="flex items-center gap-x-3 text-gray-800">
+                                    <div className="flex items-center min-w-20">
+                                        <FiUser className="w-4 h-4 mr-1 text-gray-400" />
+                                        <div className="text-sm text-gray-500">총 인원</div>
+                                    </div>
+                                    <span>{totalPassengers(event.subEvents.find((sub) => sub.type === 'tour').busGroups)}명</span>
+                                </div>
+                                <div className="flex items-center gap-x-3 text-gray-800">
+                                    <div className="flex items-center min-w-20">
+                                        <LuBusFront className="w-4 h-4 mr-1 text-gray-400" />
+                                        <div className="text-sm text-gray-500">운행 버스</div>
+                                    </div>
+                                    <span>{event.subEvents.find((sub) => sub.type === 'tour').busGroups?.length || 0}대</span>
+                                </div>
+                            </div>
+                            
+                            <div className="border-t border-gray-100 pt-4 space-y-4">
+                            {event.subEvents.find((sub) => sub.type === 'tour').destinations?.map((dest) => (
+                                <div key={dest.id} className="bg-gray-50 rounded p-4">
+                                    <div className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                        <span className="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded text-xs mr-2">{dest.name}</span>
+                                    </div>
+                                    <div className="text-xs text-gray-600">
+                                        일정 시간: {formatDateTime(dest.schedule.start)} ~ {formatDateTime(dest.schedule.end)}
+                                    </div>
+                                    <div className="text-xs text-gray-500 mt-1">참여: {dest.currentCount} / {dest.maxCapacity}명</div>
+                                </div>
+                            ))}
+    
+                            </div>
+                        </div>
                 </div>
             )}
 
             {/* 이벤트 설명 */}
-            <div className="bg-white p-4 rounded-lg shadow">
-                <h3 className="text-lg font-bold mb-4">이벤트 설명</h3>
-                <p className="text-gray-600">
-                    {event.description || "이벤트에 대한 상세 설명이 준비중입니다."}
-                </p>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <div className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-gray-500 mr-2"></div>
+                    <h2 className="text-lg font-medium text-gray-900">이벤트 설명</h2>
+                    </div>
+                </div>
+                
+                <div className="p-6">
+                    <p className="text-gray-700">
+                        {event.description || "이벤트에 대한 상세 설명이 준비중입니다."}
+                    </p>
+                </div>
             </div>
         </div>
     );
