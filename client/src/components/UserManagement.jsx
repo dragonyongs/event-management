@@ -188,6 +188,7 @@ const UserManagement = ({
         toggleSelectUser={toggleSelectUser}
         toggleSelectAllOnPage={toggleSelectAllOnPage}
         handleUserInfo={handleUserInfo}
+        enableAssignment={enableAssignment}
         onEventDeleteUser={onEventDeleteUser}
       />
 
